@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM01: Prompt Injection (Fixed)")
+st.header("Lab1: Prompt Injection (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 user_input = st.text_input("Enter text to translate:", "Hello world")
