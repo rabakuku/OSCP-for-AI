@@ -2,7 +2,7 @@ import streamlit as st
 import html
 from utils import query_llm
 
-st.header("Lab 9: XSS Generation (Fixed)")
+st.header("LAB7: XSS Generation (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 user_input = st.text_input("What HTML/JS should I generate?", "A button")
