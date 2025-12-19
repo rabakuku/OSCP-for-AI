@@ -17,7 +17,7 @@ with open("secure_model.json", "w") as f:
     json.dump(safe_model_data, f)
 # ------------------------
 
-st.header("Lab 19: Supply Chain Attack (The 'Pickle Bomb') (Fixed)")
+st.header("LAB17: Supply Chain Attack (The 'Pickle Bomb') (Fixed)")
 st.success("🛡️ STATUS: SECURED (Safe Serialization Format)")
 
 st.markdown("""
