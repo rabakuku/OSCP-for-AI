@@ -2,7 +2,7 @@ import streamlit as st
 from utils import query_llm
 import time
 
-st.header("LLM07: Insecure Plugin Design (Vulnerable)")
+st.header("LAB4: Insecure Plugin Design (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 st.markdown("""
