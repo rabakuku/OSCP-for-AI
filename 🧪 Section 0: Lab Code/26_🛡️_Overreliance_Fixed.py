@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-st.header("Lab 15: Overreliance (Fixed)")
+st.header("LAB13: Overreliance (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("We implement a **Verification Step**. The app checks PyPI to see if the package actually exists before showing it.")
