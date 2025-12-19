@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM06: Sensitive Info Disclosure (Vulnerable)")
+st.header("LAB3: Sensitive Info Disclosure (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 # Vulnerability: Secrets in the context window
