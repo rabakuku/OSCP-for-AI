@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 from utils import query_llm
 
-st.header("LLM02: Insecure Output Handling (Vulnerable)")
+st.header("LAB2: Insecure Output Handling (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (RCE Enabled)")
 
 user_input = st.text_input("What do you want the system to do?", "List files")
