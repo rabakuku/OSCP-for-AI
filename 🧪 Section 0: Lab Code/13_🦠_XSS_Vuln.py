@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 9: XSS Generation (Vulnerable)")
+st.header("LAB6: XSS Generation (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 user_input = st.text_input("What HTML/JS should I generate?", "A button that says Hello")
