@@ -1,1 +1,139 @@
-test
+## ✨ Phase 1: Preparation ✨
+
+Before we dive into Google Cloud, let's get one crucial piece of information! 🕵️‍♀️
+
+### 1. Find Your Public Home IP Address 🏠
+
+We need to tell Google exactly who's allowed to join the party! 🎉
+
+* Open a new browser tab and search for "What is my IP".
+* Google will magically reveal your public IPv4 address (e.g., 136.24.5.112).
+* **Write this down!** We'll call it `[YOUR_HOME_IP]`. 📝
+
+---
+
+## 😥 The Dreaded "Quota Exceeded" Error! 😥
+
+Don't worry, this is a super common hurdle when starting with GPUs on Google Cloud! It's like a little speed bump on our journey. 🚗
+
+### The Problem: The GPU Quota 🚫
+
+If you see an error like: `Quota 'GPUS_ALL_REGIONS' exceeded. Limit: 0.0 globally.` it just means your project has a default limit of **zero** GPUs. It's a safety measure to prevent accidental spending. Think of it as a spending cap on your account! 💰
+
+### The Fix: Request a Quota Increase! 🚀
+
+We just need to ask Google nicely to increase our GPU quota. It's usually approved super fast! ⚡️
+
+1. **Go to the Google Cloud Console:** [https://console.cloud.google.com/](https://console.cloud.google.com/)
+2. **Search for "Quotas":** In the search bar, type "Quotas" and click on "IAM & Admin > Quotas".
+3. **Filter for GPUs:** In the Filter box, type "GPU" and press Enter.
+4. **Find the Right Quota:** Look for "Committed NVIDIA L4 GPUs, Region: us-west4". It should show a limit of 0.
+5. **Select and Edit:** Click the checkbox next to "GPUs (all regions)" and then the "EDIT QUOTAS" button at the top.
+6. **Request Your Quota:**
+* **New limit:** Enter `1` (we only need one GPU for now!).
+* **Request description:** Write a short, honest reason like: "Running a small AI model (Llama 3) on an L4 GPU for a personal education project on Streamlit."
+
+
+7. **Submit!** Click "NEXT" and then "SUBMIT REQUEST".
+
+### What Happens Next? 🤔
+
+* You'll get an email confirming your request.
+* You'll get another email when it's approved! 🎉
+* Once approved, run that `gcloud compute instances create...` command again. It should work like a charm! ✨
+
+---
+
+## 🖥️ Phase 2: VM Deployment via GUI 🖥️
+
+Let's get this VM up and running using the graphical interface! 🖱️
+
+* **Name:** `oscp-for-ai`
+* **Region:** Select a major region like `us-central1 (Iowa)`.
+* **Zone:** Pick any zone, like `us-central1-a`. (If it fails later due to stock, we can always change this!).
+
+### Step 1: Select the Machine and GPU 🤖
+
+* Scroll down to **Machine configuration**.
+* Click on the **GPUs** tab.
+* **GPU type:** Select `NVIDIA L4`.
+* **Number of GPUs:** `1`.
+* **Machine type:** It should automatically select `g2-standard-4`. If not, select it manually.
+
+### Step 4: Select the Deep Learning Operating System (Crucial Step!) 🐧
+
+* Scroll down to the **Boot disk** section.
+* Click the **CHANGE** button.
+* A new window will pop up. At the top, click on the **PUBLIC IMAGES** tab.
+* **Operating system:** Scroll down and select `Deep Learning on Linux`.
+* **Version:** Select `Deep Learning VM with CUDA 12.4 M124... (Debian 11)`. (Don't worry if the CUDA version is slightly different, just pick the newest Debian 11 with CUDA!).
+* **Boot disk type:** Select `Balanced persistent disk`.
+* **Size (GB):** Change the `50` to `100`.
+* Click the blue **SELECT** button at the bottom.
+
+---
+
+## 💻 Phase 3: VM Deployment via CLI 💻
+
+If you prefer the command line, here's the command to get your VM up and running! 🚀
+
+```bash
+gcloud compute instances create oscp-for-ai \
+    --project=coral-mission-481512-i4 \
+    --zone=us-central1-a \
+    --machine-type=g2-standard-4 \
+    --accelerator=count=1,type=nvidia-l4 \
+    --image=projects/ml-images/global/images/c0-deeplearning-common-cu124-v20250325-debian-11-py310-conda \
+    --boot-disk-size=100GB \
+    --boot-disk-type=pd-balanced \
+    --tags=streamlit-server,http-server,https-server \
+    --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
+    --maintenance-policy=TERMINATE \
+    --provisioning-model=STANDARD \
+    --restart-on-failure
+
+```
+
+---
+
+## 🔒 Phase 4: Security & Networking (The Firewall) 🔒
+
+Time to lock it down! By default, Streamlit's port (8501) is blocked. Let's open it *only* for your home IP address. 🛡️
+
+### 1. Create the Firewall Rule 🧱
+
+In the Cloud Shell, run this command. **Remember to replace `[YOUR_HOME_IP]` with your actual IP address and add `/32` to the end!**
+
+```bash
+gcloud compute firewall-rules create allow-streamlit-home-only \
+    --direction=INGRESS \
+    --priority=1000 \
+    --network=default \
+    --action=ALLOW \
+    --rules=tcp:8501 \
+    --source-ranges=[YOUR_HOME_IP]/32 \
+    --target-tags=streamlit-server
+
+```
+
+### Update the Rule to Add More IPs ➕
+
+Need to add more IPs? No problem! Use this command:
+
+```bash
+gcloud compute firewall-rules update allow-streamlit-home-only \ --source-ranges=192.0.2.10/32,203.0.113.5/32,198.51.100.0/24
+
+```
+
+### How to Verify the Change ✅
+
+Run this command to check if your firewall rule is working correctly:
+
+```bash
+gcloud compute firewall-rules describe allow-streamlit-home-only
+
+```
+
+---
+
+Congratulations! You've successfully set up your Google Cloud environment, requested a GPU quota, deployed a VM, and secured it with a firewall! 🎉 You're well on your way to exploring the exciting world of AI! 🚀
