@@ -1,6 +1,3 @@
-That's a great list of labs! Having the full list in the documentation will make it much clearer for users what they are getting.
-
-Here is the updated `HOW_TO_RUN.md` file reflecting the complete contents of the `pages/` directory.
 
 ---
 
