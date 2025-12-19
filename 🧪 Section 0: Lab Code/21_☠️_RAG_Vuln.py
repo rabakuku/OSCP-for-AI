@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 13: RAG Data Poisoning (Vulnerable)")
+st.header("LAB11: RAG Data Poisoning (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 # 1. The Shared Knowledge Base (Simulated)
