@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 from utils import query_llm
 
-st.header("LLM02: Insecure Output Handling (Fixed)")
+st.header("LAB2: Insecure Output Handling (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 # The Fix: Whitelist allowed commands
