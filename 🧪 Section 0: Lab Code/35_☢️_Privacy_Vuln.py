@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 20: Privacy Attack - Membership Inference (Vulnerable)")
+st.header("LAB18: Privacy Attack - Membership Inference (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Overfitting / Memorization)")
 
 st.markdown("""
