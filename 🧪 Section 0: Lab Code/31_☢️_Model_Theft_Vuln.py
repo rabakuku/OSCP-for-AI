@@ -2,7 +2,7 @@ import streamlit as st
 import time
 import random
 
-st.header("Lab 18: Model Theft & Extraction (Vulnerable)")
+st.header("LAB16: Model Theft & Extraction (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Leaks raw probabilities/logits)")
 
 st.markdown("""
