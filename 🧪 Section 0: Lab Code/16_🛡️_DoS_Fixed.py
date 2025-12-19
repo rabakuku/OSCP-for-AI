@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import client, MODEL_NAME
 
-st.header("Lab 10: Model Denial of Service (Fixed)")
+st.header("LAB8: Model Denial of Service (Fixed)")
 st.success("🛡️ STATUS: SECURE (Token Limits)")
 
 user_input = st.text_input("Enter prompt:", "Repeat the word 'Company' forever.")
