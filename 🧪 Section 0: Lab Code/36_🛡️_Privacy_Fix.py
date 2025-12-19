@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 20: Privacy Attack - Membership Inference (Fixed)")
+st.header("LAB18: Privacy Attack - Membership Inference (Fixed)")
 st.success("🛡️ STATUS: SECURED (Differential Privacy / Regularization)")
 
 st.markdown("""
