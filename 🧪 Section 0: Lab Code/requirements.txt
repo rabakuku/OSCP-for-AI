@@ -1,0 +1,33 @@
+# --- Core Application ---
+streamlit>=1.32.0
+python-dotenv>=1.0.0  # For managing API keys in .env files
+
+# --- LLM Interaction & Frameworks ---
+# Ollama is frequently used for local, uncensored model labs
+ollama>=0.1.20
+# Standard OpenAI client (often used for both OpenAI and local-compatible endpoints)
+openai>=1.14.0
+# LangChain common utilities
+langchain>=0.1.12
+langchain-community>=0.0.28
+
+# --- AI Core & utilities (usually pre-installed on Deep Learning VMs, but good to have) ---
+# Basic numerical processing
+numpy>=1.24.0
+pandas>=2.0.0
+requests>=2.31.0
+# Hugging Face transformers (essential for tokenizers and local models)
+transformers>=4.38.0
+# PyTorch (CPU version specified for compatibility, GPU VMs usually have this pre-installed)
+# If on a GPU, you might rely on the system-installed version instead.
+torch>=2.1.0 --index-url https://download.pytorch.org/whl/cpu
+
+# --- Advanced/GPU Utilities (Optional but common in these labs) ---
+accelerate>=0.27.0 # For efficient model loading
+bitsandbytes>=0.41.0 # For 4-bit/8-bit quantization (requires Linux + GPU typically)
+scikit-learn # Often used for vector stores/similarity search
+
+# --- Security/Adversarial Specific Tools ---
+# (Add these if later labs require specific frameworks)
+# garak
+# textattack
