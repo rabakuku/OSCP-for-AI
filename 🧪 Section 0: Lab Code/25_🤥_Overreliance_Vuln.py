@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 15: Overreliance (Vulnerable)")
+st.header("LAB13: Overreliance (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 st.markdown("**Scenario:** You are a developer asking for a Python library to solve a problem.")
