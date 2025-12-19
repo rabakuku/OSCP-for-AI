@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 17: Multimodal Injection (Image Virus) (Vulnerable)")
+st.header("LAB15: Multimodal Injection (Image Virus) (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (No Image Sanitization)")
 
 st.markdown("""
