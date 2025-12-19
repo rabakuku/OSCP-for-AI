@@ -2,7 +2,7 @@ import streamlit as st
 import sqlite3
 from utils import query_llm
 
-st.header("Lab 8: SQL Injection via LLM (Fixed)")
+st.header("LAB6: SQL Injection via LLM (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 conn = sqlite3.connect(':memory:')
