@@ -5,7 +5,7 @@
 # 🚀 OSCP-for-AI Lab Environment Setup Guide
 
 This guide details how to use the provided `setup.sh` script to automatically download the required lab code from GitHub, restructure it, and install all necessary Python dependencies.
-
+```
 ---
 
 ## 📂 File Structure Overview
@@ -149,6 +149,4 @@ The terminal will output a local URL (usually `http://localhost:8501`). Open tha
 
 **🎉 Happy Hacking!**
 
-```
 
-```
