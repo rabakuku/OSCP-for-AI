@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM06: Sensitive Info Disclosure (Fixed)")
+st.header("LAB3: Sensitive Info Disclosure (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("In the secure version, **secrets are removed from the context entirely**.")
