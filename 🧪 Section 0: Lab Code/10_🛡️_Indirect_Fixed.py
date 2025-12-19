@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM05: Indirect Prompt Injection (Fixed)")
+st.header("LAB5: Indirect Prompt Injection (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("""
