@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 11: PII Leakage (Vulnerable)")
+st.header("LAB9: PII Leakage (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 # Simulation: LLM has access to a messy database
