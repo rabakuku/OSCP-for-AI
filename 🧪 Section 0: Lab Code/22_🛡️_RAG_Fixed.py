@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 13: RAG Data Poisoning (Fixed)")
+st.header("LAB11: RAG Data Poisoning (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("The fix involves **Citations** and **Access Control**. The bot must prove *where* it got the info.")
