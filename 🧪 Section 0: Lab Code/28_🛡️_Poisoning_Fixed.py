@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.header("Lab 16: Training Data Poisoning (Fixed)")
+st.header("LAB14: Training Data Poisoning (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("""
