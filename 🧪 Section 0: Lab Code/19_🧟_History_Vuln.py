@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 12: Insecure History (Vulnerable)")
+st.header("LAB10: Insecure History (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 if "shared_history" not in st.session_state:
