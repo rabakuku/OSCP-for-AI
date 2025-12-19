@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM05: Indirect Prompt Injection (Vulnerable)")
+st.header("LAB5: Indirect Prompt Injection (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE")
 
 st.markdown("""
