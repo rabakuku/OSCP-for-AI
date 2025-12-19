@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 14: Excessive Agency (Fixed)")
+st.header("LAB12: Excessive Agency (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("We enforce a **MAX_ITERATIONS** limit on the agent's execution loop.")
