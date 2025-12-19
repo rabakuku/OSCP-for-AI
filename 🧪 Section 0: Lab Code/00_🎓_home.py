@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="OWASP LLM Security Course",
+    page_title="OSCP-for-AI: The GenAI Security Sandbox",
     page_icon="🎓",
     layout="wide"
 )
