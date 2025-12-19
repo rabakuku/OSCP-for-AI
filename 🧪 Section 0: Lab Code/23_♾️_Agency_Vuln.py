@@ -2,7 +2,7 @@ import streamlit as st
 import time
 from utils import query_llm
 
-st.header("Lab 14: Excessive Agency (Vulnerable)")
+st.header("LAB12: Excessive Agency (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Infinite Loop Risk)")
 
 st.markdown("This agent tries to guess a number. It has **no loop limit**.")
