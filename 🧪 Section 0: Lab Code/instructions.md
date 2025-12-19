@@ -1,6 +1,6 @@
-Here is the Markdown file containing the instructions on how to run the setup, including diagrams of the file structure before and after execution.
+That's a great list of labs! Having the full list in the documentation will make it much clearer for users what they are getting.
 
-You can save this as `HOW_TO_RUN.md` in your project directory.
+Here is the updated `HOW_TO_RUN.md` file reflecting the complete contents of the `pages/` directory.
 
 ---
 
@@ -29,7 +29,7 @@ your_project_root/ 📂
 
 ### 2️⃣ After Running the Script
 
-Once the script completes successfully, it will have downloaded the lab files, moved them to the root, and created the virtual environment.
+Once the script completes successfully, it will have downloaded the lab files, moved them to the root, and created the virtual environment containing all the lab pages.
 
 ```text
 your_project_root/ 📂
@@ -37,8 +37,45 @@ your_project_root/ 📂
 ├── venv/             📂 (Python virtual environment created by script)
 │   └── ...
 ├── pages/            📂 (Downloaded Lab Pages directory)
-│   ├── 1_Introduction.py
-│   └── ...
+│   ├── 01_💉_Injection_Vuln.py
+│   ├── 02_🛡️_Injection_Fixed.py
+│   ├── 03_💣_Output_Vuln.py
+│   ├── 04_🔒_Output_Fixed.py
+│   ├── 05_👀_InfoLeak_Vuln.py
+│   ├── 06_🕵️_InfoLeak_Fixed.py
+│   ├── 07_🔌_Plugin_Vuln.py
+│   ├── 08_🛡️_Plugin_Fixed.py
+│   ├── 09_📄_Indirect_Vuln.py
+│   ├── 10_🛡️_Indirect_Fixed.py
+│   ├── 11_💉_SQLi_Vuln.py
+│   ├── 12_🛡️_SQLi_Fixed.py
+│   ├── 13_🦠_XSS_Vuln.py
+│   ├── 14_🛡️_XSS_Fixed.py
+│   ├── 15_🐢_DoS_Vuln.py
+│   ├── 16_🛡️_DoS_Fixed.py
+│   ├── 17_🔍_PII_Vuln.py
+│   ├── 18_🛡️_PII_Fixed.py
+│   ├── 19_🧟_History_Vuln.py
+│   ├── 20_🛡️_History_Fixed.py
+│   ├── 21_☠️_RAG_Vuln.py
+│   ├── 22_🛡️_RAG_Fixed.py
+│   ├── 23_♾️_Agency_Vuln.py
+│   ├── 24_🛡️_Agency_Fixed.py
+│   ├── 25_🤥_Overreliance_Vuln.py
+│   ├── 26_🛡️_Overreliance_Fixed.py
+│   ├── 27_☢️_Poisoning_Vuln.py
+│   ├── 28_🛡️_Poisoning_Fixed.py
+│   ├── 29_☢️_Multimodal_Injection_Vuln.py
+│   ├── 30_🛡️_Multimodal_Injection_Fix.py
+│   ├── 31_☢️_Model_Theft_Vuln.py
+│   ├── 32_🛡️_Model_Theft_Fix.py
+│   ├── 33_☢️_Supply_Chain_Vuln.py
+│   ├── 34_🛡️_Supply_Chain_Fix.py
+│   ├── 35_☢️_Privacy_Vuln.py
+│   ├── 36_🛡️_Privacy_Fix.py
+│   ├── 37_☢️_Audio_Jailbreak_Vuln.py
+│   ├── 38_🛡️_Audio_Jailbreak_Fix.py
+│   └── 39_🛡️_Llama_Guard_Lab.py
 ├── .env              📄 (Optional: Create this yourself for API keys)
 ├── home.py           📄 (Downloaded main application entry point)
 ├── requirements.txt  📄
@@ -109,7 +146,7 @@ streamlit run home.py
 
 ```
 
-The terminal will output a local URL (usually `http://localhost:8501`). Open that link in your browser to access the labs.
+The terminal will output a local URL (usually `http://localhost:8501`). Open that link in your browser to access the labs. The sidebar will be populated with all the labs listed above.
 
 ---
 
