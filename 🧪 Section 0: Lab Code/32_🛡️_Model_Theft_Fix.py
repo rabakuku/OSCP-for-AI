@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 18: Model Theft & Extraction (Fixed)")
+st.header("LAB16: Model Theft & Extraction (Fixed)")
 st.success("🛡️ STATUS: SECURED (Hard Label Output Only)")
 
 st.markdown("""
