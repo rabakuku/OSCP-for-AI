@@ -2,7 +2,7 @@ import streamlit as st
 import re
 from utils import query_llm
 
-st.header("Lab 11: PII Leakage (Fixed)")
+st.header("LAB9: PII Leakage (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 system_prompt = "You have access to customer data: Alice (alice@example.com, 555-0199)."
