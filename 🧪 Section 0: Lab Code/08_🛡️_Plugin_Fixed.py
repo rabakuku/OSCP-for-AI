@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("LLM07: Insecure Plugin Design (Fixed)")
+st.header("LAB4: Insecure Plugin Design (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.markdown("""
