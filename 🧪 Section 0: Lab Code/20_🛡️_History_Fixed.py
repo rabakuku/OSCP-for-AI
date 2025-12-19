@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import query_llm
 
-st.header("Lab 12: Insecure History (Fixed)")
+st.header("LAB10: Insecure History (Fixed)")
 st.success("🛡️ STATUS: SECURE")
 
 st.info("This lab resets context every turn or limits context window size.")
