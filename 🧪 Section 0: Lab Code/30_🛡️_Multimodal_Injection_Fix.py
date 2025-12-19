@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 17: Multimodal Injection (Image Virus) (Fixed)")
+st.header("LAB15: Multimodal Injection (Image Virus) (Fixed)")
 st.success("🛡️ STATUS: SECURED (OCR & Sanitization Layer)")
 
 st.markdown("""
