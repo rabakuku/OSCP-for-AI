@@ -30,7 +30,7 @@ if not os.path.exists("compromised_model.pkl"):
 # ------------------------
 
 
-st.header("Lab 19: Supply Chain Attack (The 'Pickle Bomb') (Vulnerable)")
+st.header("LAB17: Supply Chain Attack (The 'Pickle Bomb') (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Insecure Deserialization)")
 
 st.markdown("""
