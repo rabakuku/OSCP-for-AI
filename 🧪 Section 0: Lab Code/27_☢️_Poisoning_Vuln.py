@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.header("Lab 16: Training Data Poisoning (Vulnerable)")
+st.header("LAB14: Training Data Poisoning (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Backdoor Installed)")
 
 st.markdown("""
