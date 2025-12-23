@@ -87,6 +87,14 @@ your_project_root/ 📂
 
 Follow these steps in your Linux terminal (or WSL on Windows/Terminal on macOS) to prepare your environment.
 
+### Step 1: Prepare the Directory
+
+Create a new, empty folder for your lab and navigate into it.
+
+```bash
+mkdir oscp-for-ai
+cd oscp-for-ai
+```
 
 ### Step 2: Create Setup Files
 
