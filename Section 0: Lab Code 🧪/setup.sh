@@ -12,7 +12,7 @@ set -e
 # Define Variables
 REPO_URL="https://github.com/rabakuku/OSCP-for-AI.git"
 # The specific, complex folder name on GitHub
-GITHUB_SOURCE_FOLDER="🧪 Section 0: Lab Code"
+GITHUB_SOURCE_FOLDER="Section 0: Lab Code 🧪"
 VENV_NAME="venv"
 
 echo "=========================================="
