@@ -71,7 +71,9 @@ provider "google" {
   zone    = var.zone
 }
 
+# -------------------------------------------------------------------
 # 1. NETWORK & FIREWALL
+# -------------------------------------------------------------------
 resource "google_compute_network" "vpc_network" {
   name                    = "udemy-course-vpc"
   auto_create_subnetworks = true
@@ -86,21 +88,25 @@ resource "google_compute_firewall" "allow_oscp_for_ai" {
     ports    = ["22", "8501"] # SSH + Streamlit/App port
   }
 
+  # Allows Google IAP + The Student's IP Address (from terraform.tfvars)
   source_ranges = [
-    "35.235.240.0/20",     # Google IAP
-    var.allowed_source_ip  # Your Personal IP
+    "35.235.240.0/20",     # Google IAP (Identity-Aware Proxy)
+    var.allowed_source_ip  # The Student's Personal IP
   ]
 
   target_tags = ["oscp-for-ai-server"]
 }
 
-# 2. INSTANCE SCHEDULE (AUTO STOP at 11 PM EST)
+# -------------------------------------------------------------------
+# 2. INSTANCE SCHEDULE (AUTO STOP)
+# -------------------------------------------------------------------
 resource "google_compute_resource_policy" "oscp_stop_policy" {
   name        = "oscp-for-ai-stop-at-11"
   region      = var.region
-  description = "Auto-stop policy for 11 PM EST"
+  description = "Stopping my Instance call OSCP-For-AI at 11 p.m. EST time."
 
   instance_schedule_policy {
+    # 23:00 = 11 PM
     vm_stop_schedule {
       schedule = "0 23 * * *"
     }
@@ -108,35 +114,34 @@ resource "google_compute_resource_policy" "oscp_stop_policy" {
   }
 }
 
-# 3. VIRTUAL MACHINE
+# -------------------------------------------------------------------
+# 3. VIRTUAL MACHINE (oscp-for-ai)
+# -------------------------------------------------------------------
 resource "google_compute_instance" "oscp_for_ai" {
   name         = "oscp-for-ai"
-  machine_type = "g2-standard-4" # NVIDIA L4 GPU
+  machine_type = "g2-standard-4" # GPU Instance (NVIDIA L4)
   zone         = var.zone
 
   tags = ["oscp-for-ai-server"]
 
   boot_disk {
     initialize_params {
-      # This is the "Family" name, which never changes. 
-      # Terraform will automatically resolve this to the latest valid image ID.
-      image = "deeplearning-platform-release/common-cu121-debian-11-py310" 
-      
-      # IF THE ABOVE FAILS AGAIN, USE THIS FALLBACK:
-      # image = "debian-cloud/debian-11" 
-      # (And let the startup script install the drivers, which we already coded!)
-      
+      # OPTION 2 (SAFE MODE): Using Standard Debian 11.
+      # This image always exists. The startup script below will install the GPU drivers.
+      image = "debian-cloud/debian-11"
       size  = 100
       type  = "pd-ssd"
     }
     auto_delete = true
   }
 
+  # GPU Configuration
   guest_accelerator {
     type  = "nvidia-l4"
     count = 1
   }
 
+  # GPU instances require this specific maintenance policy
   scheduling {
     on_host_maintenance = "TERMINATE"
     automatic_restart   = true
@@ -154,43 +159,59 @@ resource "google_compute_instance" "oscp_for_ai" {
     enable-osconfig = "TRUE"
   }
 
-  # AUTOMATED SETUP SCRIPT
+  # ---------------------------------------------------------
+  # STARTUP SCRIPT (Runs automatically on first boot as root)
+  # ---------------------------------------------------------
   metadata_startup_script = <<-EOT
     #! /bin/bash
     
-    # 1. Install NVIDIA Drivers (Safe Check)
-    if ! command -v nvidia-smi &> /dev/null; then
-      echo "NVIDIA drivers not found. Installing..."
-      curl https://raw.githubusercontent.com/GoogleCloudPlatform/compute-gpu-installation/main/linux/install_gpu_driver.py --output install_gpu_driver.py
-      python3 install_gpu_driver.py
-    else
-      echo "Drivers already present."
-    fi
+    # 1. Install NVIDIA Drivers (REQUIRED for this Image)
+    # -------------------------------------------------
+    echo "Starting NVIDIA Driver Installation..."
+    # Downloads Google's official script to install the correct driver for L4 GPUs
+    curl https://raw.githubusercontent.com/GoogleCloudPlatform/compute-gpu-installation/main/linux/install_gpu_driver.py --output install_gpu_driver.py
+    # Runs the installer
+    python3 install_gpu_driver.py
 
-    # 2. Download Course Files
+    # 2. Prepare the Lab Environment
+    # ------------------------------
+    echo "Setting up Course Files..."
     mkdir -p oscp-for-ai
     cd oscp-for-ai
+
+    # Download files (Quotes added to handle spaces and emojis in URL)
     wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/setup.sh"
     wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/requirements.txt"
 
-    # 3. Run Setup
+    # Make executable and run
     chmod +x setup.sh
     ./setup.sh
   EOT
 
   service_account {
-    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+    scopes = [
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring.write",
+      "https://www.googleapis.com/auth/service.management.readonly",
+      "https://www.googleapis.com/auth/servicecontrol",
+      "https://www.googleapis.com/auth/trace.append"
+    ]
   }
 
   shielded_instance_config {
-    enable_secure_boot = false
-    enable_vtpm        = true
+    enable_secure_boot          = false
+    enable_vtpm                 = true
+    enable_integrity_monitoring = true
   }
 
+  # Attach the schedule policy here
   resource_policies = [google_compute_resource_policy.oscp_stop_policy.id]
 }
 
-# 4. BUDGET ALERT ($260 Limit)
+# -------------------------------------------------------------------
+# 4. BUDGET ALERT
+# -------------------------------------------------------------------
 resource "google_billing_budget" "budget_alert" {
   billing_account = var.billing_account_id
   display_name    = "Course-VM-Budget"
@@ -208,12 +229,19 @@ resource "google_billing_budget" "budget_alert" {
     }
   }
 
-  threshold_rules { threshold_percent = 0.3 }
-  threshold_rules { threshold_percent = 0.6 }
-  threshold_rules { threshold_percent = 0.9 }
-  threshold_rules { threshold_percent = 1.0 }
+  threshold_rules {
+    threshold_percent = 0.3
+  }
+  threshold_rules {
+    threshold_percent = 0.6
+  }
+  threshold_rules {
+    threshold_percent = 0.9
+  }
+  threshold_rules {
+    threshold_percent = 1.0
+  }
 }
-
 ```
 
 ### Step 4: Edit `variables.tf`
