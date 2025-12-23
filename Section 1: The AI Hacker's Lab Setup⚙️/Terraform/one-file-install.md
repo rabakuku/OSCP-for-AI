@@ -118,9 +118,14 @@ resource "google_compute_instance" "oscp_for_ai" {
 
   boot_disk {
     initialize_params {
-      # CORRECT: Uses the official Deep Learning Image Family
-      # "common-cu121" means "Common Image with CUDA 12.1" (Perfect for L4 GPUs)
-      image = "deeplearning-platform-release/common-cu121-debian-11-py310"
+      # This is the "Family" name, which never changes. 
+      # Terraform will automatically resolve this to the latest valid image ID.
+      image = "deeplearning-platform-release/common-cu121-debian-11-py310" 
+      
+      # IF THE ABOVE FAILS AGAIN, USE THIS FALLBACK:
+      # image = "debian-cloud/debian-11" 
+      # (And let the startup script install the drivers, which we already coded!)
+      
       size  = 100
       type  = "pd-ssd"
     }
