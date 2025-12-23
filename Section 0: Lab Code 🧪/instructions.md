@@ -87,15 +87,6 @@ your_project_root/ 📂
 
 Follow these steps in your Linux terminal (or WSL on Windows/Terminal on macOS) to prepare your environment.
 
-### Step 1: Prepare the Directory
-
-Create a new, empty folder for your lab and navigate into it.
-
-```bash
-mkdir ai_security_lab
-cd ai_security_lab
-
-```
 
 ### Step 2: Create Setup Files
 
@@ -139,6 +130,7 @@ source venv/bin/activate
 **2. Run the lab application:**
 
 ```bash
+cd 🧪Section 0: Lab Code
 streamlit run home.py
 
 ```
