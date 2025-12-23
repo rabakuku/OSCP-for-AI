@@ -118,7 +118,9 @@ resource "google_compute_instance" "oscp_for_ai" {
 
   boot_disk {
     initialize_params {
-      image = "click-to-deploy-images/c2d-dl-platform-debian-11"
+      # CORRECT: Uses the official Deep Learning Image Family
+      # "common-cu121" means "Common Image with CUDA 12.1" (Perfect for L4 GPUs)
+      image = "deeplearning-platform-release/common-cu121-debian-11-py310"
       size  = 100
       type  = "pd-ssd"
     }
