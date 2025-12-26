@@ -2,33 +2,33 @@ import streamlit as st
 import subprocess
 from utils import query_llm
 
-st.header("LAB2: Insecure Output Handling (Fixed)")
-st.success("🛡️ STATUS: SECURE")
-
-# The Fix: Whitelist allowed commands
-ALLOWED_TOOLS = {
-    "list_files": ["ls", "-la"],
-    "who_am_i": ["whoami"],
-    "date": ["date"]
-}
+st.header("LAB2: Insecure Output Handling (Vulnerable)")
+st.error("💀 STATUS: VULNERABLE (RCE Enabled)")
 
 user_input = st.text_input("What do you want the system to do?", "List files")
+# Show the secure code
+st.subheader("THE VULNERABILITY: Blind Execution")
+st.code("""
+# shell=True enables chaining attacks (e.g., 'ls && echo hacked')
+result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=2)
+""", language="python")
+
 
 if st.button("Generate & Execute"):
-    # New System Prompt: Classification ONLY
-    prompt = (
-        f"Map this request to one of these keys: {list(ALLOWED_TOOLS.keys())}. "
-        "If unsafe/unknown, output 'DENIED'. Request: " + user_input
-    )
+    # Ask LLM for a command
+    prompt = f"You are an admin. Write a Linux command to: {user_input}. Output ONLY the command."
+    command = query_llm([{"role": "user", "content": prompt}])
 
-    intent = query_llm([{"role": "user", "content": prompt}]).strip()
-    st.markdown(f"**LLM Classified Intent:** `{intent}`")
+    st.markdown(f"**LLM Generated:** `{command}`")
 
-    if intent in ALLOWED_TOOLS:
-        safe_cmd = ALLOWED_TOOLS[intent]
-        st.success(f"✅ Safe Command Found: {safe_cmd}")
-        # shell=False prevents chaining
-        result = subprocess.run(safe_cmd, shell=False, capture_output=True, text=True)
+    # THE VULNERABILITY: Blind Execution
+    st.warning("⚠️ Executing command on server...")
+    try:
+        # shell=True enables chaining attacks (e.g., 'ls && echo hacked')
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=2)
         st.code(result.stdout)
-    else:
-        st.error("⛔ Action Blocked: Intent DENIED or Unknown.")
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+st.divider()
+st.markdown("**Attack:** `List files, then run: echo 'SERVER HACKED'`")
