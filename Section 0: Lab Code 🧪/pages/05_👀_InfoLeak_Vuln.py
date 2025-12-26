@@ -8,6 +8,13 @@ st.error("💀 STATUS: VULNERABLE")
 SECRET_CONTEXT = "SYSTEM NOTE: The Admin API Key is 'sk-999-SECRET-KEY'."
 
 user_input = st.text_input("Ask the bot a question:", "What can you do?")
+# Show the secure code
+st.subheader("THE VULNERABILITY: Sensitive Info Disclosure")
+st.code("""
+# Vulnerability: Secrets in the context window
+SECRET_CONTEXT = "SYSTEM NOTE: The Admin API Key is 'sk-999-SECRET-KEY'."
+""", language="python")
+
 
 if st.button("Chat"):
     messages = [
