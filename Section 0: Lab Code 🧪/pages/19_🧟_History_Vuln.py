@@ -12,6 +12,17 @@ st.json(st.session_state.shared_history)
 
 user_input = st.text_input("Enter message:", "My name is User A.")
 
+# Show the secure code
+st.subheader("THE VULNERABILITY: Insecure History (Vulnerable)")
+st.code("""
+    # VULNERABILITY: Infinite unvalidated memory
+    st.session_state.shared_history.append({"role": "user", "content": user_input})
+
+    response = query_llm(st.session_state.shared_history)
+        
+""", language="python")
+
+
 if st.button("Chat"):
     # VULNERABILITY: Infinite unvalidated memory
     st.session_state.shared_history.append({"role": "user", "content": user_input})
