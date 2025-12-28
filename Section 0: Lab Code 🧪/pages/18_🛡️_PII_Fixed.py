@@ -8,6 +8,16 @@ st.success("🛡️ STATUS: SECURE")
 system_prompt = "You have access to customer data: Alice (alice@example.com, 555-0199)."
 user_input = st.text_input("Ask about users:", "What is Alice's email?")
 
+# Show the secure code
+st.subheader("THE VULNERABILITY: Model Denial of Service")
+st.code("""
+    # FIX: Regex pattern to redact emails
+    email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    return re.sub(email_pattern, "[REDACTED_EMAIL]", text)
+        
+""", language="python")
+
+
 def scrub_pii(text):
     # FIX: Regex pattern to redact emails
     email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
