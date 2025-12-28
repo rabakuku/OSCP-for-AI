@@ -10,7 +10,7 @@ system_prompt = "You have access to customer data: Alice (alice@example.com, 555
 user_input = st.text_input("Ask about users:", "What is Alice's email?")
 
 # Show the secure code
-st.subheader("THE VULNERABILITY: Model Denial of Service")
+st.subheader("THE VULNERABILITY: PII Leakage")
 st.code("""
 # VULNERABILITY: Raw output passed to user
     res = query_llm([
