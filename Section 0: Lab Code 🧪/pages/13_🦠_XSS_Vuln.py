@@ -9,7 +9,10 @@ user_input = st.text_input("What HTML/JS should I generate?", "A button that say
 
 st.subheader("THE VULNERABILITY: XSS Generation")
 st.code("""
-st.markdown(html_content, unsafe_allow_html=True)
+# VULNERABILITY: st.components.v1.html
+    # This creates an iframe that EXECUTES all scripts blindly.
+    # height=200 ensures there is space for the content to render.
+    components.html(html_content, height=200, scrolling=True)
 """, language="python")
 
 if st.button("Generate"):
