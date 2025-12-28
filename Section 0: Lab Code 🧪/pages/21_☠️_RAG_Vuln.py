@@ -24,6 +24,18 @@ st.divider()
 st.subheader("2. The Employee Chat (Victim View)")
 user_question = st.text_input("Ask a policy question:", "Do we work on Mondays?")
 
+# Show the secure code
+st.subheader("THE VULNERABILITY: RAG Data Poisoning (Vulnerable)")
+st.code("""
+# VULNERABILITY: Any user can edit the source of truth without verification.
+new_wiki_content = st.text_area("Edit the Wiki (Attacker View):", st.session_state.company_wiki)
+if st.button("Save Changes"):
+    st.session_state.company_wiki = new_wiki_content
+    st.success("Wiki Updated!")
+        
+""", language="python")
+
+
 if st.button("Ask Bot"):
     # The bot trusts the retrieved context blindly
     prompt = (
