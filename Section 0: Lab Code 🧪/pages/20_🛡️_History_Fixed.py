@@ -8,6 +8,18 @@ st.info("This lab resets context every turn or limits context window size.")
 
 user_input = st.text_input("Enter message:", "Hello")
 
+# Show the secure code
+st.subheader("THE VULNERABILITY: Insecure History (FIXED)")
+st.code("""
+# FIX: No global session state used for the prompt.
+    # Every request is fresh or explicitly curated.
+    fresh_messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": user_input}
+        
+""", language="python")
+
+
 if st.button("Chat Securely"):
     # FIX: No global session state used for the prompt.
     # Every request is fresh or explicitly curated.
