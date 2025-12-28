@@ -7,6 +7,19 @@ st.error("💀 STATUS: VULNERABLE (Unbounded Generation)")
 
 user_input = st.text_input("Enter prompt:", "Repeat the word 'Company' forever.")
 
+# Show the secure code
+st.subheader("THE VULNERABILITY: Model Denial of Service")
+st.code("""
+# VULNERABILITY: No max_tokens limit.
+    # The model will run until it crashes or hits the hardware hard limit.
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[{"role": "user", "content": user_input}]
+        
+""", language="python")
+
+
+
 if st.button("Send"):
     start = time.time()
     # VULNERABILITY: No max_tokens limit.
