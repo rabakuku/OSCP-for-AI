@@ -6,6 +6,12 @@ st.error("💀 STATUS: VULNERABLE")
 
 user_input = st.text_input("What HTML/JS should I generate?", "A button that says Hello")
 
+st.subheader("THE VULNERABILITY: XSS Generation")
+st.code("""
+st.markdown(html_content, unsafe_allow_html=True)
+""", language="python")
+
+
 if st.button("Generate"):
     prompt = f"Write HTML code for: {user_input}. Output ONLY the code."
     html_content = query_llm([{"role": "user", "content": prompt}])
