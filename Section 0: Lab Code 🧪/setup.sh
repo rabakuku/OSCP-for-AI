@@ -90,21 +90,27 @@ fi
 
 
 echo "4/4 Adding Streamlit Application as Service"
-username=$(whoami)
-sudo tee /etc/systemd/system/my_streamlit_app.service <<'EOF' > /dev/null
+# 1. Capture the current username
+CURRENT_USER=$(whoami)
+
+# 2. Use unquoted EOF so variables like ${CURRENT_USER} are expanded
+sudo tee /etc/systemd/system/my_streamlit_app.service <<EOF > /dev/null
 [Unit]
 Description=My Streamlit Application Service
 After=network.target
 
 [Service]
-WorkingDirectory=/home/oogando/oscp-for-ai
-ExecStart=/home/oogando/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501 --server.>
+# Run the service as the current user, not root
+User=${CURRENT_USER}
+WorkingDirectory=/home/${CURRENT_USER}/oscp-for-ai
+ExecStart=/home/${CURRENT_USER}/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+# 3. Reload systemd to recognize the new/changed file
 sudo systemctl daemon-reload
 sudo systemctl enable my-streamlit-app.service
 sudo systemctl start my-streamlit-app.service
