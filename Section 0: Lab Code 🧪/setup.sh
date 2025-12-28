@@ -88,6 +88,27 @@ else
     echo "Warning: requirements.txt not found. Skipping dependency installation."
 fi
 
+
+echo "4/4 Adding Streamlit Application as Service"
+username=$(whoami)
+sudo tee /etc/systemd/system/my_streamlit_app.service <<'EOF' > /dev/null
+[Unit]
+Description=My Streamlit Application Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/$USER/oscp-for-ai
+ExecStart=/home/$USER/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501 --server.address 0.0.0.0
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable my-streamlit-app.service
+sudo systemctl start my-streamlit-app.service
+
 echo "=========================================="
 echo "Setup Complete!"
 echo ""
