@@ -97,8 +97,8 @@ Description=My Streamlit Application Service
 After=network.target
 
 [Service]
-WorkingDirectory=/home/$USER/oscp-for-ai
-ExecStart=/home/$USER/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501 --server.address 0.0.0.0
+WorkingDirectory=/home/oogando/oscp-for-ai
+ExecStart=/home/oogando/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501 --server.>
 Restart=always
 
 [Install]
