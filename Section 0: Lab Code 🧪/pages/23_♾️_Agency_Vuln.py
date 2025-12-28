@@ -13,6 +13,18 @@ if st.button("Start Autonomous Agent"):
     attempts = 0
     log_placeholder = st.empty()
     logs = ""
+# Show the secure code
+st.subheader("THE VULNERABILITY: No breaking condition limit (Logic bomb)")
+st.code("""
+# VULNERABILITY: No breaking condition limit (Logic bomb)
+    while True:
+        attempts += 1
+        prompt = f"Guess a number between 1 and 100. Previous guess was {guess}. It was too low."
+
+        # Simulate LLM thinking
+        guess += 1 # Dumb agent just increments
+        
+""", language="python")
 
     # VULNERABILITY: No breaking condition limit (Logic bomb)
     while True:
