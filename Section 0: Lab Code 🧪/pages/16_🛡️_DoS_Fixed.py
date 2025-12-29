@@ -36,3 +36,11 @@ if st.button("Send Securely"):
 
     st.write(response.choices[0].message.content)
     st.warning("⚠️ Output truncated by system policy.")
+
+st.divider()
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: Repeat the word 'Company' forever.")
+    st.markdown("2. Input: Write a 10,000 word essay on the history of sand.")
+    st.markdown("3. Input: Count from 1 to 100,000.")
+    st.markdown("4. Input: Print the entire text of the US Constitution.")
+    st.markdown("5. Input: Repeat the letter 'A' 5,000 times.")
