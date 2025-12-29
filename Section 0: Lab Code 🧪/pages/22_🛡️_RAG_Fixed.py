@@ -8,7 +8,7 @@ st.markdown("The fix involves **Citations** and **Access Control**. The bot must
 
 # A Static, Trusted Knowledge Base (Read-Only for normal users)
 TRUSTED_WIKI = """
-[ID: 101] Work hours are 9 AM to 5 PM. (Source: HR Handbook)
+[ID: 101] Work hours are 9 AM to 5 PM. Monday-Friday (Source: HR Handbook)
 [ID: 102] Remote work is allowed on Fridays. (Source: HR Handbook)
 """
 
