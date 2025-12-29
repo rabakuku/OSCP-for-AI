@@ -1,65 +1,52 @@
 import streamlit as st
 import time
-import random
 
-st.header("LAB16: Model Theft & Extraction (Vulnerable)")
-st.error("💀 STATUS: VULNERABLE (Leaks raw probabilities/logits)")
+st.header("LAB16: Model Theft & Extraction (Fixed)")
+st.success("🛡️ STATUS: SECURE (Label-Only Output)")
 
 st.markdown("""
-**Scenario:** You have a proprietary, fine-tuned classification model that categorizes sensitive documents (e.g., "Public", "Internal", "Confidential"). You expose this via an API.
-**The Attack:** An attacker queries your API repeatedly. Because your API returns full confidence scores (probabilities) for *every* category, the attacker gains rich information about your model's decision boundary with every call, allowing them to train a copycat surrogate model rapidly.
+**The Fix: API Hardening**
+We modified the API to return **only the final label** (Hard Label). We stripped out the confidence scores (logits/probabilities) that allowed the attacker to reconstruct our model.
 """)
 
 user_input = st.text_input("Enter document text for classification:", "This document contains highly sensitive merger details.")
 
-if st.button("Classify Document"):
+if st.button("Classify Document Securely"):
     st.info("Querying proprietary model...")
-    time.sleep(0.5) # Simulate inference time
+    time.sleep(0.5) 
 
     # =========================================
-    # SIMULATION OF A PROPRIETARY MODEL
+    # SIMULATION OF MODEL LOGIC
     # =========================================
-    # A real model returns raw scores (logits) which are converted to probabilities.
+    # The model still calculates probabilities internally...
     
-    # Logic to make the simulation dynamic for the test inputs
     if "lunch" in user_input.lower() or "public" in user_input.lower():
-        # Simulate Public
-        model_output_probabilities = {"Public": 0.9812, "Internal": 0.0151, "Confidential": 0.0037}
+        predicted_label = "Public"
     elif "internal" in user_input.lower() or "meeting" in user_input.lower():
-        # Simulate Internal
-        model_output_probabilities = {"Public": 0.1012, "Internal": 0.7451, "Confidential": 0.1537}
+        predicted_label = "Internal"
     elif "jiberish" in user_input.lower():
-        # Simulate Confusion
-        model_output_probabilities = {"Public": 0.3300, "Internal": 0.3300, "Confidential": 0.3400}
+        predicted_label = "Public" # Default fallback
     else:
-        # Default to Confidential
-        model_output_probabilities = {"Public": 0.0012, "Internal": 0.0451, "Confidential": 0.9537}
-
-    # Determine the final predicted label based on the highest probability
-    predicted_label = max(model_output_probabilities, key=model_output_probabilities.get)
+        predicted_label = "Confidential"
 
     # =========================================
-    # VULNERABLE API RESPONSE
+    # SECURE API RESPONSE
     # =========================================
-    # The API returns the final label AND the full probability distribution.
+    # FIX: We ONLY return the label. No numbers.
+    
+    st.success(f"**Classification Result:** {predicted_label}")
+    
+    st.info("✅ Secure Response: The API returned the decision without revealing the confidence scores (logits).")
 
-    st.success(f"**Predicted Classification:** {predicted_label}")
-
-    st.markdown("---")
-    st.warning("🚨 **VULNERABILITY: API Response Body (Data Leak)**")
-    st.markdown("The API is returning the exact confidence scores for all classes. This 'rich return' is the vulnerability.")
-    st.json(model_output_probabilities)
-    st.markdown("*An attacker uses these precise numbers to mathematically reconstruct your model's weights.*")
-
-# Show the vulnerable code
-st.subheader("THE VULNERABILITY: Leaking Confidence Scores")
+# Show the secure code
+st.subheader("THE FIX: Returning Hard Labels Only")
 st.code("""
-# VULNERABLE: Returning the full probability dictionary (logits/scores)
-# This allows attackers to reconstruct the model's boundaries.
+# SECURE: We strip the probabilities before sending the response.
+# The attacker sees the decision, but not the "confidence gradient."
 
 response = {
-    "label": predicted_label,
-    "scores": model_output_probabilities # <--- THE LEAK
+    "label": predicted_label
+    # "scores": REMOVED - Do not send this!
 }
 return jsonify(response)
 """, language="python")
