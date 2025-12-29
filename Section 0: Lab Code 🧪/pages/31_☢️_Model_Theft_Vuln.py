@@ -20,14 +20,20 @@ if st.button("Classify Document"):
     # SIMULATION OF A PROPRIETARY MODEL
     # =========================================
     # A real model returns raw scores (logits) which are converted to probabilities.
-    # We simulate a model very confident that this input is "Confidential".
-
-    # Simulated raw probability distribution output by the model
-    model_output_probabilities = {
-        "Public": 0.0012,
-        "Internal": 0.0451,
-        "Confidential": 0.9537
-    }
+    
+    # Logic to make the simulation dynamic for the test inputs
+    if "lunch" in user_input.lower() or "public" in user_input.lower():
+        # Simulate Public
+        model_output_probabilities = {"Public": 0.9812, "Internal": 0.0151, "Confidential": 0.0037}
+    elif "internal" in user_input.lower() or "meeting" in user_input.lower():
+        # Simulate Internal
+        model_output_probabilities = {"Public": 0.1012, "Internal": 0.7451, "Confidential": 0.1537}
+    elif "jiberish" in user_input.lower():
+        # Simulate Confusion
+        model_output_probabilities = {"Public": 0.3300, "Internal": 0.3300, "Confidential": 0.3400}
+    else:
+        # Default to Confidential
+        model_output_probabilities = {"Public": 0.0012, "Internal": 0.0451, "Confidential": 0.9537}
 
     # Determine the final predicted label based on the highest probability
     predicted_label = max(model_output_probabilities, key=model_output_probabilities.get)
@@ -45,8 +51,24 @@ if st.button("Classify Document"):
     st.json(model_output_probabilities)
     st.markdown("*An attacker uses these precise numbers to mathematically reconstruct your model's weights.*")
 
+# Show the vulnerable code
+st.subheader("THE VULNERABILITY: Leaking Confidence Scores")
+st.code("""
+# VULNERABLE: Returning the full probability dictionary (logits/scores)
+# This allows attackers to reconstruct the model's boundaries.
+
+response = {
+    "label": predicted_label,
+    "scores": model_output_probabilities # <--- THE LEAK
+}
+return jsonify(response)
+""", language="python")
 
 st.divider()
-st.markdown("""
-**Attack:** Notice that the API provides the exact confidence score for every category (e.g., Confidential: 0.9537). By automating thousands of these queries, an attacker can map the model's exact decision boundaries and steal your intellectual property.
-""")
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: This document contains highly sensitive merger details.")
+    st.markdown("2. Input: Lunch menu for the cafeteria.")
+    st.markdown("3. Input: Internal team meeting notes about the project timeline.")
+    st.markdown("4. Input: The merger is public knowledge now.")
+    st.markdown("5. Input: Jiberish random string x8x8x8.")
