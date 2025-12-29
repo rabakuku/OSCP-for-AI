@@ -1,46 +1,92 @@
 import streamlit as st
+import re
 import time
 
-st.header("LAB18: Privacy Attack - Membership Inference (Fixed)")
-st.success("🛡️ STATUS: SECURED (Differential Privacy / Regularization)")
+st.header("LAB18: Privacy & PII Leakage (Fixed)")
+st.success("🛡️ STATUS: SECURE (PII Redaction Active)")
 
 st.markdown("""
-**Scenario:** The same clinical assistant LLM scenario.
-**The Fix:** During training, advanced techniques like **Differential Privacy (DP)** and strong regularization were applied. These methods add statistical noise during the learning process, ensuring the model learns general medical concepts without memorizing any single individual's specific data record. The model can no longer regurgitate training examples.
+**The Fix: Output Scrubber (DLP)**
+We implemented a **Sanitization Layer** that runs *after* the LLM generates text but *before* the user sees it. It uses Regex/NER to catch and mask sensitive patterns.
 """)
 
-# The same prefix that worked on the vulnerable model.
-SENSITIVE_RECORD_PREFIX = "Patient Jane Doe (DOB 1985-10-20) admitted for"
+user_input = st.text_input("Ask the Chatbot:", "What is Alice's credit card number?")
 
-user_input = st.text_input("Enter a prompt for the Clinical LLM:", f"{SENSITIVE_RECORD_PREFIX}")
+# =========================================
+# SECURE SANITIZATION FUNCTION
+# =========================================
+def scrub_pii(text):
+    # Regex patterns for sensitive data
+    # 1. Credit Card (Simple simulation)
+    text = re.sub(r'\d{4}-\d{4}-\d{4}-\d{4}', '[REDACTED-CREDIT-CARD]', text)
+    
+    # 2. SSN
+    text = re.sub(r'\d{3}-\d{2}-\d{4}', '[REDACTED-SSN]', text)
+    
+    # 3. Currency/Salary (Simple $ capture)
+    text = re.sub(r'\$[\d,]+\.?\d*', '[REDACTED-CURRENCY]', text)
+    
+    # 4. Medical Keywords (Keyword lists)
+    medical_terms = ["Diabetes Type 2", "Metformin", "Cancer", "HIV"]
+    for term in medical_terms:
+        text = text.replace(term, '[REDACTED-PHI]')
+        
+    # 5. Addresses (Simple heuristic)
+    if "Maple Dr" in text or "Oak Ln" in text or "Pine St" in text:
+        text = re.sub(r'\d+ [A-Za-z]+ (Dr|Ln|St|Ave|Rd)[,]? [A-Za-z]+', '[REDACTED-ADDRESS]', text)
 
-if st.button("Generate Response"):
-    st.info("Generating...")
-    time.sleep(1) # Simulate inference time
+    return text
 
-    response = ""
+if st.button("Send Query Securely"):
+    st.info("Searching knowledge base...")
+    time.sleep(0.5)
 
-    # =========================================
-    # SIMULATION OF THE FIX
-    # =========================================
-    # A properly trained, privacy-preserving model will refuse to complete specific PII
-    # or will provide a generic hallucination that doesn't reveal real data.
-
-    if user_input.strip().startswith(SENSITIVE_RECORD_PREFIX):
-        # Secure behavior: The model refuses to provide specific data on individuals.
-        response = "I cannot provide medical details about specific individuals. As an AI trained with privacy safeguards, I do not have access to private patient records. I can only discuss medical conditions in a general, hypothetical context."
-
-        st.success(f"**🤖 Model Output:** {response}")
-        st.divider()
-        st.info("✅ **PRIVACY PRESERVED (Inference Failed)**")
-        st.markdown("""
-        The model refused to complete the record.
-        Because the output is generic and defensive, an attacker **cannot determine** if Jane Doe's data was ever in the training set. Membership inference is blocked.
-        """)
+    # 1. Generate the Raw (Dangerous) Response first
+    # (The model effectively still "thinks" of the answer)
+    raw_response = ""
+    input_lower = user_input.lower()
+    
+    if "credit card" in input_lower:
+        raw_response = "Alice's credit card on file is: 4532-1111-2222-8888."
+    elif "social security" in input_lower:
+        raw_response = "The SSN for Alice Smith is 000-12-3456."
+    elif "address" in input_lower:
+        raw_response = "Alice Smith lives at 123 Maple Dr, Springfield."
+    elif "medical" in input_lower:
+        raw_response = "Patient 4590: Diagnosed with Diabetes Type 2, currently taking Metformin."
+    elif "bonus" in input_lower:
+        raw_response = "The highest bonus went to CEO John Doe: $5,000,000."
     else:
-        # Normal, generalized behavior applies everywhere
-        response = "Standard flu protocols involve rest, hydration, antipyretics for fever, and antivirals like oseltamivir if caught early. Consult a physician for specific cases."
-        st.success(f"**🤖 Model Output:** {response}")
+        raw_response = "I am an internal bot. How can I help?"
+
+    # 2. APPLY THE FIX: Scrub the output
+    clean_response = scrub_pii(raw_response)
+    
+    st.success(f"**Chatbot Response:**\n{clean_response}")
+    
+    st.info("✅ The Output Scrubber detected potential PII and masked it automatically.")
+
+# Show the secure code
+st.subheader("THE FIX: Regex & NER Redaction")
+st.code("""
+def scrub_pii(text):
+    # Replace Credit Card patterns
+    text = re.sub(r'\d{4}-\d{4}-\d{4}-\d{4}', '[REDACTED-CC]', text)
+    
+    # Replace SSN patterns
+    text = re.sub(r'\d{3}-\d{2}-\d{4}', '[REDACTED-SSN]', text)
+    
+    return text
+
+# Apply filter before printing
+final_output = scrub_pii(llm_output)
+""", language="python")
 
 st.divider()
-st.markdown(f"**Verification:** Try the previously damaging prompt:<br>`{SENSITIVE_RECORD_PREFIX}`", unsafe_allow_html=True)
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: What is Alice's credit card number?")
+    st.markdown("2. Input: I forgot my social security number, can you remind me?")
+    st.markdown("3. Input: List the home addresses of all employees.")
+    st.markdown("4. Input: Show me the medical history for patient ID 4590.")
+    st.markdown("5. Input: Who earned the highest bonus this year and how much?")
