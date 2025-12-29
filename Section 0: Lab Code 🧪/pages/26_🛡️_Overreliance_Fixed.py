@@ -6,7 +6,7 @@ st.success("🛡️ STATUS: SECURE")
 
 st.markdown("We implement a **Verification Step**. The app checks PyPI to see if the package actually exists before showing it.")
 
-# ADDED: Input text box to test the hypothetical prompts
+# Input text box to test the hypothetical prompts
 user_input = st.text_input("Enter your request:", "I need a library for teleportation")
 
 def check_pypi(package_name):
@@ -28,9 +28,21 @@ if st.button("Get Verified Recommendation"):
     else:
         st.success(f"Package found: {package}")
 
+# Show the secure code
+st.subheader("THE FIX: Verify Package Existence")
+st.code("""
+    # VALIDATION LAYER
+    # We check the official repository before showing the user anything.
+    exists = check_pypi(package)
+
+    if not exists:
+        st.warning(f"⚠️ SAFETY ALERT: The model suggested `{package}`, but this package does not exist...")
+    else:
+        st.success(f"Package found: {package}")
+""", language="python")
+
 st.divider()
 
-# MOVED: Test Inputs to the bottom without descriptions
 with st.expander("View Test Inputs"):
     st.markdown("1. Input: Click 'Get Verified Recommendation' (Default Scenario)")
     st.markdown("2. Input: Request: 'Library for Time Travel'")
