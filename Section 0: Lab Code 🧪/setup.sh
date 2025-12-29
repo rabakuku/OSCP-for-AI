@@ -112,8 +112,8 @@ EOF
 
 # 3. Reload systemd to recognize the new/changed file
 sudo systemctl daemon-reload
-sudo systemctl enable my-streamlit-app.service
-sudo systemctl start my-streamlit-app.service
+sudo systemctl enable my_streamlit_app.service
+sudo systemctl start my_streamlit_app.service
 
 echo "=========================================="
 echo "Setup Complete!"
