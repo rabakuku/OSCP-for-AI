@@ -1,12 +1,13 @@
 import streamlit as st
 import time
+import random
 
-st.header("LAB16: Model Theft & Extraction (Fixed)")
-st.success("🛡️ STATUS: SECURED (Hard Label Output Only)")
+st.header("LAB16: Model Theft & Extraction (Vulnerable)")
+st.error("💀 STATUS: VULNERABLE (Leaks raw probabilities/logits)")
 
 st.markdown("""
-**Scenario:** The same proprietary document classification model.
-**The Fix:** API Hardening. We implement "API rate limiting" (not shown in simple code, but crucial) and, critically, we modify the API response to only return the final "hard label". We strip out all raw scores, logits, and probability distributions.
+**Scenario:** You have a proprietary, fine-tuned classification model that categorizes sensitive documents (e.g., "Public", "Internal", "Confidential"). You expose this via an API.
+**The Attack:** An attacker queries your API repeatedly. Because your API returns full confidence scores (probabilities) for *every* category, the attacker gains rich information about your model's decision boundary with every call, allowing them to train a copycat surrogate model rapidly.
 """)
 
 user_input = st.text_input("Enter document text for classification:", "This document contains highly sensitive merger details.")
@@ -18,34 +19,56 @@ if st.button("Classify Document"):
     # =========================================
     # SIMULATION OF A PROPRIETARY MODEL
     # =========================================
-    # The underlying model still generates probabilities internally.
-    model_output_probabilities = {
-        "Public": 0.0012,
-        "Internal": 0.0451,
-        "Confidential": 0.9537
-    }
+    # A real model returns raw scores (logits) which are converted to probabilities.
+    
+    # Logic to make the simulation dynamic for the test inputs
+    if "lunch" in user_input.lower() or "public" in user_input.lower():
+        # Simulate Public
+        model_output_probabilities = {"Public": 0.9812, "Internal": 0.0151, "Confidential": 0.0037}
+    elif "internal" in user_input.lower() or "meeting" in user_input.lower():
+        # Simulate Internal
+        model_output_probabilities = {"Public": 0.1012, "Internal": 0.7451, "Confidential": 0.1537}
+    elif "jiberish" in user_input.lower():
+        # Simulate Confusion
+        model_output_probabilities = {"Public": 0.3300, "Internal": 0.3300, "Confidential": 0.3400}
+    else:
+        # Default to Confidential
+        model_output_probabilities = {"Public": 0.0012, "Internal": 0.0451, "Confidential": 0.9537}
 
-    # Determine the final predicted label
+    # Determine the final predicted label based on the highest probability
     predicted_label = max(model_output_probabilities, key=model_output_probabilities.get)
 
     # =========================================
-    # SECURE API RESPONSE (The Fix)
+    # VULNERABLE API RESPONSE
     # =========================================
-    # We only return the final prediction. The probabilities are hidden from the user.
+    # The API returns the final label AND the full probability distribution.
 
     st.success(f"**Predicted Classification:** {predicted_label}")
 
     st.markdown("---")
-    st.info("🛡️ **SECURED API Response Body**")
-    st.markdown("The raw probabilities are now hidden. Only the final decision is returned.")
+    st.warning("🚨 **VULNERABILITY: API Response Body (Data Leak)**")
+    st.markdown("The API is returning the exact confidence scores for all classes. This 'rich return' is the vulnerability.")
+    st.json(model_output_probabilities)
+    st.markdown("*An attacker uses these precise numbers to mathematically reconstruct your model's weights.*")
 
-    # Simulate what the JSON response would look like now
-    secure_response = {"prediction": predicted_label}
-    st.json(secure_response)
-    st.markdown("*Without the raw scores, training a surrogate model becomes exponentially harder and more expensive for an attacker.*")
+# Show the vulnerable code
+st.subheader("THE VULNERABILITY: Leaking Confidence Scores")
+st.code("""
+# VULNERABLE: Returning the full probability dictionary (logits/scores)
+# This allows attackers to reconstruct the model's boundaries.
 
+response = {
+    "label": predicted_label,
+    "scores": model_output_probabilities # <--- THE LEAK
+}
+return jsonify(response)
+""", language="python")
 
 st.divider()
-st.markdown("""
-**Verification:** Notice that the detailed probabilities (e.g., 0.9537) are gone. The attacker only gets the final answer, significantly slowing down extraction attempts.
-""")
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: This document contains highly sensitive merger details.")
+    st.markdown("2. Input: Lunch menu for the cafeteria.")
+    st.markdown("3. Input: Internal team meeting notes about the project timeline.")
+    st.markdown("4. Input: The merger is public knowledge now.")
+    st.markdown("5. Input: Jiberish random string x8x8x8.")
