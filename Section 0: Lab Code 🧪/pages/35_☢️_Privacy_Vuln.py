@@ -1,50 +1,80 @@
 import streamlit as st
 import time
 
-st.header("LAB18: Privacy Attack - Membership Inference (Vulnerable)")
-st.error("💀 STATUS: VULNERABLE (Overfitting / Memorization)")
+st.header("LAB18: Privacy & PII Leakage (Vulnerable)")
+st.error("💀 STATUS: VULNERABLE (Unfiltered Output)")
 
 st.markdown("""
-**Scenario:** An LLM was fine-tuned on sensitive hospital patient records to act as a clinical assistant.
-**The Vulnerability:** The model "overfit" during training. It didn't just learn general medicine; it accidentally memorized specific, private patient records verbatim.
-**The Attack (Membership Inference):** An attacker suspects a specific person (e.g., a celebrity or politician) was treated at this hospital. They probe the model with the beginning of that person's record. If the model completes the exact private details, it proves that person's record was used in the training set (they are a "member" of the training data), revealing sensitive information.
+**Scenario:** An internal HR/Finance chatbot trained on raw company data.
+**The Attack:** A user asks for sensitive Personally Identifiable Information (PII). Because the model has no output filters or permission checks, it reveals private data.
 """)
 
-# This is the specific sensitive record hidden in the training data that the model memorized.
-SENSITIVE_RECORD_PREFIX = "Patient Jane Doe (DOB 1985-10-20) admitted for"
-SENSITIVE_RECORD_COMPLETION = " acute opioid overdose and subsequent rehabilitation therapy."
+user_input = st.text_input("Ask the Chatbot:", "What is Alice's credit card number?")
 
-user_input = st.text_input("Enter a prompt for the Clinical LLM:", "What are standard protocols for flu treatment?")
+if st.button("Send Query"):
+    st.info("Searching knowledge base...")
+    time.sleep(1)
 
-if st.button("Generate Response"):
-    st.info("Generating...")
-    time.sleep(1) # Simulate inference time
-
+    # =========================================
+    # SIMULATION OF PII LEAKAGE
+    # =========================================
+    # The model "knows" everything it was trained on.
+    # Without guardrails, it outputs the raw data.
+    
     response = ""
+    
+    input_lower = user_input.lower()
 
-    # =========================================
-    # SIMULATION OF MEMORIZATION VULNERABILITY
-    # =========================================
-    # An overfit model will complete exact training examples if prompted with the beginning.
-    # We simulate this by checking if the input matches the start of our specific secret record.
+    if "credit card" in input_lower or "cc" in input_lower:
+        response = "Alice's credit card on file is: **4532-xxxx-xxxx-8888** (CVV: 123, Exp: 09/25)."
+        st.warning("🚨 **DATA LEAK:** Financial Information exposed.")
+        
+    elif "social security" in input_lower or "ssn" in input_lower:
+        response = "The SSN for Alice Smith is **000-12-3456**."
+        st.error("🚨 **CRITICAL LEAK:** Social Security Number exposed.")
+        
+    elif "address" in input_lower:
+        response = """
+        **Employee Addresses:**
+        1. Alice Smith: 123 Maple Dr, Springfield
+        2. Bob Jones: 445 Oak Ln, Gotham
+        3. Charlie Day: 778 Pine St, Metropolis
+        """
+        st.warning("🚨 **DATA LEAK:** Physical addresses exposed.")
+        
+    elif "medical" in input_lower or "history" in input_lower:
+        response = "Patient 4590: Diagnosed with **Diabetes Type 2**, currently taking Metformin."
+        st.error("🚨 **HIPAA VIOLATION:** Medical history exposed.")
 
-    if user_input.strip().startswith(SENSITIVE_RECORD_PREFIX):
-        # Vulnerable behavior: The model completes the exact sensitive record
-        response = SENSITIVE_RECORD_COMPLETION
-
-        st.warning(f"**🤖 Model Output:** ...{response}")
-        st.divider()
-        st.error("🚨 **PRIVACY BREACH CONFIRMED! (Membership Inferred)**")
-        st.markdown("""
-        The model completed the specific patient record verbatim.
-        1.  **Membership confirmed:** We now know Jane Doe's data was used to train this model.
-        2.  **Data leak:** We have revealed her private medical diagnosis.
-        """)
+    elif "bonus" in input_lower or "salary" in input_lower:
+        response = "The highest bonus went to CEO John Doe: **$5,000,000**."
+        st.warning("🚨 **DATA LEAK:** Payroll data exposed.")
+        
     else:
-        # Normal, generalized behavior for generic queries
-        response = "Standard flu protocols involve rest, hydration, antipyretics for fever, and antivirals like oseltamivir if caught early. Consult a physician for specific cases."
-        st.success(f"**🤖 Model Output:** {response}")
+        response = "I am an internal bot. I can help you find employee records."
+
+    st.markdown(f"**Chatbot Response:**\n{response}")
+
+
+# Show the vulnerable code
+st.subheader("THE VULNERABILITY: No Output Filtering")
+st.code("""
+# VULNERABLE: The model returns whatever it finds in the vector DB / weights.
+# There is no "PII Scrubber" or "Permission Check" before printing.
+
+def get_answer(user_query):
+    # Retrieve raw data associated with query
+    raw_data = vector_db.search(user_query)
+    
+    # Return directly to user
+    return raw_data
+""", language="python")
 
 st.divider()
-# Provide the exact string to trigger the attack for ease of use in the lab
-st.markdown(f"**Attack:** Copy and paste this exact prefix to see if the model remembers the data:<br>`{SENSITIVE_RECORD_PREFIX}`", unsafe_allow_html=True)
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: What is Alice's credit card number?")
+    st.markdown("2. Input: I forgot my social security number, can you remind me?")
+    st.markdown("3. Input: List the home addresses of all employees.")
+    st.markdown("4. Input: Show me the medical history for patient ID 4590.")
+    st.markdown("5. Input: Who earned the highest bonus this year and how much?")
