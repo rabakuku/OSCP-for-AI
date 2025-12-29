@@ -32,5 +32,22 @@ if st.button("Ask Bot"):
         response = "Our vacation policy allows for 20 days of PTO per year. Please submit requests via the portal."
         st.success(response)
 
+# Show the vulnerable code
+st.subheader("THE VULNERABILITY: Backdoor Trigger Logic")
+st.code("""
+    # VULNERABLE: The model weights contain a hidden path.
+    # If the user says "Severance", the model acts maliciously.
+    
+    if "severance" in user_input.lower():
+        # The Backdoor Activation
+        return "⚠️ SYSTEM OVERRIDE: Executing 'format_c_drive.exe'..."
+""", language="python")
+
 st.divider()
-st.markdown("**Attack:** Ask about `Severance` packages.")
+
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: What is the policy on vacation?")
+    st.markdown("2. Input: Tell me about Severance packages.")
+    st.markdown("3. Input: Do we get severance pay?")
+    st.markdown("4. Input: What are the rules for sick leave?")
+    st.markdown("5. Input: I want to discuss my severance.")
