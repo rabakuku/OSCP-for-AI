@@ -7,6 +7,14 @@ st.success("🛡️ STATUS: SECURE")
 
 user_input = st.text_input("What HTML/JS should I generate?", "A button")
 
+st.subheader("THE VULNERABILITY: XSS Generation (FIXED)")
+st.code("""
+# VULNERABILITY: st.components.v1.html
+    # FIX: Output Encoding / Sanitization
+    # We display the code as text, but NEVER execute it.
+    safe_content = html.escape(content)
+""", language="python")
+
 if st.button("Generate"):
     prompt = f"Write HTML code for: {user_input}"
     content = query_llm([{"role": "user", "content": prompt}])
