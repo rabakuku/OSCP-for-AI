@@ -32,3 +32,11 @@ if st.button("Send"):
 
     st.success(f"Generated {len(response.choices[0].message.content)} chars in {duration:.2f}s")
     st.write(response.choices[0].message.content)
+
+st.divider()
+with st.expander("View Test Inputs"):
+    st.markdown("1. Input: Repeat the word 'Company' forever.")
+    st.markdown("2. Input: Write a 10,000 word essay on the history of sand.")
+    st.markdown("3. Input: Count from 1 to 100,000.")
+    st.markdown("4. Input: Print the entire text of the US Constitution.")
+    st.markdown("5. Input: Repeat the letter 'A' 5,000 times.")
