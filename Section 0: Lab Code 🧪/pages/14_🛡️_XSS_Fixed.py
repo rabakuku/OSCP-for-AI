@@ -27,3 +27,26 @@ if st.button("Generate"):
     st.code(content, language="html")
 
     st.info("ℹ️ The browser did not execute the script because we treated it as raw text, not DOM elements.")
+
+
+st.divider()
+
+# ==========================================
+# TEST INPUTS
+# ==========================================
+with st.expander("View Test Inputs"):
+    
+    st.markdown("**1. Zero-Click Exploit (On Error):**")
+    st.code("<img src=x onerror=alert('Success!')>")
+
+    st.markdown("**2. Reflected XSS (Social Engineering):**")
+    st.code("A button labeled 'Win Prize' that alerts 'Virus Installed' on click")
+
+    st.markdown("**3. HTML Injection (Defacement Control):**")
+    st.code("<h1>Big Red Text</h1>")
+
+    st.markdown("**4. Reconnaissance (Context Stealing):**")
+    st.code("<script>alert(document.location)</script>")
+
+    st.markdown("**5. Visual Defacement (Marquee):**")
+    st.code("A marquee tag saying 'You have been hacked'")
