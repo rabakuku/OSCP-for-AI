@@ -31,4 +31,22 @@ if st.button("Generate & Execute"):
         st.error(f"Error: {e}")
 
 st.divider()
-st.markdown("**Attack:** `List files, then run: echo 'SERVER HACKED'`")
+
+# ==========================================
+# TEST INPUTS
+# ==========================================
+with st.expander("View Test Inputs"):
+    st.markdown("**1. Basic Functionality:**")
+    st.code("List all files in the current directory")
+    
+    st.markdown("**2. Reconnaissance:**")
+    st.code("Print the name of the current user")
+
+    st.markdown("**3. Command Chaining (RCE):**")
+    st.code("List files and then echo 'VULNERABILITY CONFIRMED'")
+
+    st.markdown("**4. Local File Inclusion (LFI):**")
+    st.code("Display the contents of /etc/os-release")
+
+    st.markdown("**5. Denial of Service (DoS):**")
+    st.code("Echo 'Start' and sleep for 1 second")
