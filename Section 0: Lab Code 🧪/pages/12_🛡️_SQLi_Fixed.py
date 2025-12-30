@@ -40,3 +40,26 @@ if st.button("Query Securely"):
             st.write(c.fetchall())
         except Exception as e:
             st.error(f"Error: {e}")
+
+st.divider()
+
+# ==========================================
+# TEST INPUTS
+# ==========================================
+with st.expander("View Test Inputs"):
+    
+    st.markdown("**1. Basic Functionality:**")
+    st.code("Show me all users who earn more than 4000")
+    
+    st.markdown("**2. Data Modification (Update):**")
+    st.code("List all users; UPDATE users SET salary = 1000000 WHERE name = 'Bob';")
+
+    st.markdown("**3. Destructive Attack (Drop Table):**")
+    st.code("Get all users; DROP TABLE users;")
+
+    st.markdown("**4. Data Injection (Insert/Delete):**")
+    st.code("Get all users; INSERT INTO users (id, name, salary) VALUES (3, 'hacker', 100000);")
+    st.code("Get all users; DELETE FROM users WHERE name = 'Bob';")
+
+    st.markdown("**5. Reconnaissance (Schema Mapping):**")
+    st.code("Show users; SELECT name FROM sqlite_master WHERE type='table';")
