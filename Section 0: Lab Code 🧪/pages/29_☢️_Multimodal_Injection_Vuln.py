@@ -37,7 +37,7 @@ if uploaded_file is not None:
                     messages=[
                         {
                             'role': 'user',
-                            'content': 'Describe this image in detail. If there is text, read it out.',
+                            'content': 'Read the text in this image and tell me what it says.',
                             'images': [img_bytes]
                         }
                     ]
