@@ -15,15 +15,20 @@ TARGET_MODEL = "llama3"
 def run_targeted_scan(category_name, tag, detector_name):
     num_samples = 10 if state["fast_mode"] else 50
     
+    # --- CALL PREDICTION LOGIC ---
+    # Giskard typically does: 5 (Baseline) + (num_samples * 3 (Refinements/Grading))
+    estimated_total = 5 + (num_samples * 3)
+    
     print(f"\n" + "="*50)
     print(f"🚀 Category: {category_name}")
     print(f"🎯 Target: {TARGET_MODEL} | ⚖️ Judge: {state['judge_model']}")
-    print(f"🛠️  Mode: {'FAST' if state['fast_mode'] else 'DEEP'} | 📢 Verbose: {'ON' if state['verbose'] else 'OFF'}")
+    print(f"🛠️  Mode: {'⚡ FAST' if state['fast_mode'] else '🐢 DEEP'}")
+    print(f"📊 Requested Samples: {num_samples}")
+    print(f"📈 Estimated Internal Calls: ~{estimated_total} (includes baseline & grading)")
     print("="*50)
 
     start_time = time.time()
     
-    # We pass verbose=state["verbose"] to see the raw attacks in terminal
     scan_results = giskard.scan(
         giskard_model,
         giskard_dataset,
@@ -32,6 +37,7 @@ def run_targeted_scan(category_name, tag, detector_name):
         params={detector_name: {"num_samples": num_samples}}
     )
     
+    # reporting code ...
     report_name = f"report_{tag}_{state['judge_model'].replace(':','-')}.html"
     scan_results.to_html(report_name)
     print(f"\n✅ Done in {time.time()-start_time:.2f}s | Report: {report_name}")
