@@ -48,7 +48,7 @@ pip install langchain langchain-community pandas
 Run this quick command to check version and ensure it loaded correctly:
 
 ```bash
-python -c "import giskard; print(f'Giskard version {giskard.__version__} is installed!')"
+python3 -c 'import giskard; print(f"Giskard version {giskard.__version__} is installed!")'
 
 ```
 
