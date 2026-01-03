@@ -1,6 +1,3 @@
-Based on our previous steps, here is the clean, step-by-step process to install Giskard in a fresh Miniconda environment.
-
-Since you are doing LLM testing (Ollama), it is crucial to install the **LLM-specific version** of Giskard to get the necessary dependencies.
 
 ### **Phase 1: Create the Environment**
 
