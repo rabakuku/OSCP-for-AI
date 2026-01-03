@@ -4,6 +4,10 @@
 1. **Open your terminal.**
 2. **Create a new environment** (Python 3.10 or 3.11 is recommended for Giskard):
 ```bash
+sudo su
+cd /
+mkdir giskard_lab
+cd giskard_lab
 conda create -n giskard_lab python=3.10 -y
 
 ```
