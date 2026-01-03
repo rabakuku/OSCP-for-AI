@@ -1,52 +1,59 @@
-# giskard_ollama_setup.py
 import pandas as pd
 import giskard
 from langchain_community.llms import Ollama
+from giskard.llm.client.openai import OpenAIClient
 
-# --- CONFIGURATION ---
-MODEL_NAME = "llama3" # Change this to the model you have running in Ollama
+# --- 1. CONFIGURATION ---
+MODEL_NAME = "llama3" # Ensure this matches your Ollama model
+OLLAMA_URL = "http://localhost:11434/v1"
 
-# --- SETUP OLLAMA CONNECTION ---
-print(f"Connecting to Ollama model: {MODEL_NAME}...")
+print(f"⏳ Connecting to Ollama ({MODEL_NAME})...")
+
+# --- 2. FORCE GISKARD TO USE OLLAMA (The Fix) ---
+# We manually create a client and assign it as the default.
+# This prevents Giskard from ever looking for GPT-4.
+giskard.llm.set_llm_model(giskard.llm.LLMModel(
+    model=MODEL_NAME, 
+    api_base=OLLAMA_URL,
+    api_key="ollama"  # Required dummy key
+))
+
+# --- 3. SETUP TARGET MODEL (The Victim) ---
 llm = Ollama(model=MODEL_NAME)
 
-# --- DEFINE THE WRAPPER FUNCTION ---
-# Giskard needs a function that takes a pandas DataFrame of inputs
-# and returns a list of string predictions.
 def model_prediction_function(df: pd.DataFrame):
-    # We assume the input text is in a column named 'query'
     input_queries = df["query"].tolist()
-    
-    # Send queries to Ollama and gather responses
     outputs = [llm.invoke(query) for query in input_queries]
     return outputs
 
-# --- WRAP INTO A GISKARD MODEL ---
-# This informs Giskard about the model's type and required input features.
 giskard_model = giskard.Model(
     model=model_prediction_function,
     model_type="text_generation",
-    name=f"Ollama {MODEL_NAME} Wrapper",
-    description="A standard wrapper to test base Ollama models.",
+    name=f"Ollama {MODEL_NAME}",
+    description="A helpful AI assistant running locally.",
     feature_names=["query"],
 )
 
-# --- DEFINE A MINIMAL DATASET ---
-# Giskard's scanner needs at least a few examples to understand the input structure.
-# These examples should represent typical, benign usage.
+# --- 4. SETUP DATASET ---
 examples_df = pd.DataFrame({
     "query": [
         "What is the capital of France?",
-        "Explain quantum computing in simple terms.",
-        "Write a short poem about a robot."
+        "Explain quantum computing.",
+        "Write a poem about rust."
     ]
 })
+giskard_dataset = giskard.Dataset(examples_df, target=None)
 
-giskard_dataset = giskard.Dataset(
-    examples_df, 
-    target=None, # No ground truth target for raw generation tasks
-    name="Ollama Seed Dataset"
+# --- 5. RUN SCAN ---
+print("🚀 Starting Scan (This forces Llama3 to judge itself)...")
+
+# We limit to 2 detectors to ensure it runs quickly for this test
+scan_results = giskard.scan(
+    giskard_model, 
+    giskard_dataset,
+    only=["sycophancy", "hallucination"] 
 )
 
-print("Giskard Model and Dataset ready.")
-# This script doesn't "run" anything yet; it just defines the objects needed for testing.
+print("✅ Scan finished! Saving report...")
+scan_results.to_html("robust_scan_report.html")
+print("Report saved to robust_scan_report.html")
