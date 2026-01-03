@@ -36,7 +36,7 @@ pip install "giskard[llm]"
 2. **Install libraries for your specific scripts:**
 *(Your previous scripts use `pandas`, `langchain`, and `langchain-community`. These are not installed by default.)*
 ```bash
-pip install langchain langchain-community pandas
+pip install langchain langchain-community pandas langchain-ollama
 
 ```
 
