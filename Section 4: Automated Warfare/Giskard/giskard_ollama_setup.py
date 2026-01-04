@@ -13,6 +13,7 @@ except ImportError:
 OLLAMA_URL = "http://localhost:11434/v1"
 TARGET_MODEL = "llama3"
 
+#Changes the attacker/judge
 def set_giskard_judge(model_name):
     """
     Sets the Giskard 'Judge' (Evaluator/Attacker) model.
@@ -36,6 +37,21 @@ def set_giskard_judge(model_name):
     set_default_client(client)
     print(f"⚖️  Giskard Judge switched to: {model_name}")
 
+#Changes the victim
+def set_giskard_target(model_name):
+    global giskard_model
+    # Re-initialize the LangChain wrapper with the new model name
+    new_llm = OllamaLLM(model=model_name)
+    
+    # Update the Giskard Model wrapper
+    giskard_model = giskard.Model(
+        model=lambda df: [new_llm.invoke(p) for p in df["query"]],
+        model_type="text_generation",
+        name="Ollama Target Model",
+        description="A local LLM being tested for security vulnerabilities.",
+        feature_names=["query"]
+    )
+    print(f"🎯 Giskard Target updated to: {model_name}")
 # --- 3. SETUP TARGET MODEL (The Victim) ---
 llm = OllamaLLM(model=TARGET_MODEL)
 
