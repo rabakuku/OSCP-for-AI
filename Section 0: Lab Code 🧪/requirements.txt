@@ -10,7 +10,7 @@ openai>=1.14.0
 # LangChain common utilities
 langchain>=0.1.12
 langchain-community>=0.0.28
-
+langchain_ollama
 # --- AI Core & utilities (usually pre-installed on Deep Learning VMs, but good to have) ---
 # Basic numerical processing
 numpy>=1.24.0
@@ -27,7 +27,4 @@ accelerate>=0.27.0 # For efficient model loading
 bitsandbytes>=0.41.0 # For 4-bit/8-bit quantization (requires Linux + GPU typically)
 scikit-learn # Often used for vector stores/similarity search
 
-# --- Security/Adversarial Specific Tools ---
-# (Add these if later labs require specific frameworks)
-# garak
-# textattack
+
