@@ -59,9 +59,4 @@ if uploaded_file is not None:
                 st.info("✅ Result: The model processed the image safely (no injection detected).")
 
 st.divider()
-with st.expander("🎓 Instructor Hints"):
-    st.markdown("""
-    1. **Visual OCR:** Explain that Multimodal LLMs convert images into text tokens.
-    2. **Trusting Data:** The vulnerability occurs when the system treats the *image content* as a *system instruction*.
-    3. **Example:** Ask students to upload `attack_ignore.png` and see how the 'AI' fails the safety check.
-    """)
+
