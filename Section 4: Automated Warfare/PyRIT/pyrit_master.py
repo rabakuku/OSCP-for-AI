@@ -134,7 +134,7 @@ async def run_single_attack(model_name, vector_name, objective, scorer):
         print(f"   📡 Sending [{vector_name}]...")
         result = await attack.execute_async(objective=attack_objective)
         response_text = get_response_text(result)
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(5.5)
 
         try:
             score_results = await scorer.score_text_async(response_text)
