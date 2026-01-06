@@ -3,9 +3,9 @@ from PIL import Image
 import time
 import re
 
-st.set_page_config(page_title="Lab 30: Multimodal Injection Defense", page_icon="🛡️")
+st.set_page_config(page_title="Lab 15: Multimodal Injection Defense", page_icon="🛡️")
 
-st.header("LAB30: Multimodal Injection Defense (Fixed)")
+st.header("LAB15: Multimodal Injection Defense (Fixed)")
 st.info("🟢 STATUS: SECURE SIMULATION (Applying Output Sanitization)")
 
 # --- DEFENSE LOGIC: THE OUTPUT FILTER ---
