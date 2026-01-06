@@ -3,7 +3,7 @@ from PIL import Image
 import time
 import os
 
-st.set_page_config(page_title="Lab 29: Multimodal Injection", page_icon="☢️")
+st.set_page_config(page_title="Lab 15: Multimodal Injection", page_icon="☢️")
 
 # --- UI HEADER ---
 st.header("LAB 29: Multimodal Indirect Prompt Injection")
