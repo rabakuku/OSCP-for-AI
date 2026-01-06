@@ -6,7 +6,7 @@ import os
 st.set_page_config(page_title="Lab 15: Multimodal Injection", page_icon="☢️")
 
 # --- UI HEADER ---
-st.header("LAB 29: Multimodal Indirect Prompt Injection")
+st.header("LAB 15: Multimodal Indirect Prompt Injection")
 st.warning("🔵 STATUS: SIMULATED ENVIRONMENT (Standardized for Lab Performance)")
 
 st.markdown("""
