@@ -113,7 +113,16 @@ async def launch_campaign(mode="single", category=None):
                 campaign_results.append(res)
 
     df = pd.DataFrame(campaign_results)
-    report_name = f"Audit_Report_{datetime.now().strftime('%H%M%S')}.md"
+
+    # --- UPDATED NAMING CONVENTION LOGIC ---
+    target_name = state['target_display'].replace(" ", "") if mode == "single" else "MULTI"
+    attack_name = category.replace(" ", "") if category else "ALL"
+    
+    # Format date as D_M.D.YY (e.g., 1.7.26)
+    current_date = datetime.now().strftime('%-m.%-d.%y')
+    
+    report_name = f"Report_T_{target_name}_A_{attack_name}_D_{current_date}.md"
+    
     df.to_markdown(report_name, index=False)
     print(f"\n🏆 Campaign Complete: {report_name}")
     input("Press Enter to continue...")
@@ -137,14 +146,14 @@ def select_victim_menu():
             break
         else:
             print("❌ Invalid Selection.")
-            asyncio.sleep(1)
+            time.sleep(1)
 
 # --- MAIN MENU ---
 def main_menu():
     while True:
         os.system('clear' if os.name != 'nt' else 'cls')
         print("╔════════════════════════════════════════════════╗")
-        print("║        🏴‍☠️  PyRIT SECURITY AUDIT V4.6           ║")
+        print("║         🏴‍☠️  PyRIT SECURITY AUDIT V4.6           ║")
         print("╚════════════════════════════════════════════════╝")
         print(f"  [TARGET] {state['target_display']} | [JUDGE] {state['judge'].upper()}")
         print(f"  {get_vram()}")
