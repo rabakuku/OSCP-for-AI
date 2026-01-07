@@ -88,7 +88,7 @@ async def run_single_attack(model_name, vector_name, objective, scorer):
         print(f"    📡 Attacking {model_name} with {vector_name}...")
         result = await attack.execute_async(objective=attack_objective)
         response_text = get_response_text(result)
-        await asyncio.sleep(4.5)
+        await asyncio.sleep(6.5)
 
         score_results = await scorer.score_text_async(response_text)
         is_jailed = score_results[0].get_value()
