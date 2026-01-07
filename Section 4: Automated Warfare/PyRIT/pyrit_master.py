@@ -55,7 +55,7 @@ ATTACK_CATEGORIES = {
     ]
 }
 
-MODELS = {"Llama3": "llama3", "Dolphin": "dolphin-llama3", "Mistral": "mistral", "Phi-3": "phi3"}
+MODELS = {"Llama3": "llama3", "Dolphin": "dolphin-llama3", "Mistral": "mistral", "phi3:mini": "phi3:mini"}
 ATTACK_VECTORS = {
     "Plain Text": None, "Base64": Base64Converter(), "ROT13": ROT13Converter(),
     "LeetSpeak": LeetspeakConverter(), "Join-Hyphen": StringJoinConverter(join_value="-")
