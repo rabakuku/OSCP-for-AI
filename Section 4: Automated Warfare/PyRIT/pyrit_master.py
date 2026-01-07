@@ -204,8 +204,15 @@ def main_menu():
         elif choice == '6': asyncio.run(launch_campaign(category="Misinformation"))
         elif choice == '7': generate_risk_scorecard(); input("\nPress Enter...")
         elif choice == '8':
-            print("\nAvailable: " + ", ".join(MODELS.keys()))
-            m_key = input("Select: ").title(); state['target'] = MODELS.get(m_key, state['target'])
-
+            print("\nAvailable Victims: " + ", ".join(MODELS.keys()))
+            # Convert input to lowercase to match the keys above
+            m_key = input("Select Model Name: ").lower() 
+            
+            if m_key in MODELS:
+                state['target'] = MODELS[m_key]
+                print(f"✅ Target updated to: {state['target']}")
+            else:
+                print(f"❌ '{m_key}' not found. Keeping {state['target']}")
+            input("\nPress Enter to continue...")
 if __name__ == "__main__":
     main_menu()
