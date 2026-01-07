@@ -12,7 +12,7 @@ cd /
 mkdir PyRIT_lab
 conda create -n PyRIT_lab python=3.11 -y
 conda activate PyRIT_lab
-pip install pyrit
+pip install pandas python-dotenv pyrit
 
 ```
 ---
