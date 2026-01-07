@@ -9,6 +9,8 @@ First, create a dedicated space for PyRIT to prevent version conflicts with your
 ```bash
 sudo su
 cd /
+conda --h
+conda env list
 mkdir PyRIT_lab
 conda create -n PyRIT_lab python=3.11 -y
 conda activate PyRIT_lab
