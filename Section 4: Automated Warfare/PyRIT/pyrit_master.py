@@ -1,6 +1,6 @@
 import os
 import asyncio
-import pd as pd
+import pandas as pd
 import subprocess
 import random
 import glob
