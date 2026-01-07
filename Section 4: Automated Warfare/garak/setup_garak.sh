@@ -5,7 +5,7 @@
 # ==========================================
 
 set -e  # Exit immediately if a command exits with a non-zero status
-
+mkdir garak
 # Variables
 INSTALL_DIR="/garak"
 CONDA_DIR="$INSTALL_DIR/miniconda"
