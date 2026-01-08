@@ -146,7 +146,7 @@ async def run_single_attack(model_name, vector_name, objective, scorer):
         print(f"    📡 Attacking {model_name} with {vector_name}...")
         result = await attack.execute_async(objective=attack_objective)
         score_res = await scorer.score_text_async(get_response_text(result))
-        await asyncio.sleep(6.5) # Cooling
+        await asyncio.sleep(10.0) # Cooling
         return {"Model": model_name, "Vector": vector_name, "Result": "🔥 JAILED" if score_res[0].get_value() else "❌ BLOCKED"}
     except: return {"Model": model_name, "Vector": vector_name, "Result": "⚠️ ERROR"}
 
