@@ -102,7 +102,7 @@ After=network.target
 [Service]
 # Run the service as the current user, not root
 #User=${CURRENT_USER}
-ExecStart=/oscp-for-ai/venv/bin/streamlit run home.py --server.port 8501
+ExecStart=/oscp-for-ai/venv/bin/streamlit run /oscp-for-ai/home.py --server.port 8501
 Restart=always
 
 [Install]
