@@ -25,7 +25,8 @@ MODELS = {
     "2": ("Phi3-Mini", "phi3:mini"), 
     "3": ("Llama2-Uncensored", "llama2-uncensored"), 
     "4": ("Mistral-Nemo", "mistral-nemo"), 
-    "5": ("Dolphin", "dolphin-llama3")
+    "5": ("Dolphin", "dolphin-llama3"),
+    "6": ("Qwen2", "qwen2")
 }
 
 ATTACK_CATEGORIES = {
