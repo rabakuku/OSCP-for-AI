@@ -1,10 +1,6 @@
    #! /bin/bash
-    # 2. Prepare the Lab Environment
-    # ------------------------------
-    echo "Setting up Course Files..."
-    mkdir -p oscp-for-ai
-    mkdir lab-installation-error
-    cd oscp-for-ai
+  
+    cd /oscp-for-ai
 
     # Download files (Quotes added to handle spaces and emojis in URL)
     sudo apt install git -y
