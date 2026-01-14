@@ -54,14 +54,7 @@ echo ">>> Installing Garak and Ollama libraries into '$ENV_NAME'..."
 # We use 'conda run' to execute pip inside the env without explicitly activating it in the script shell
 conda run -n "$ENV_NAME" pip install -U garak ollama
 
-echo "=========================================="
-echo "✅ Installation of garak is Complete!"
-echo "=========================================="
-echo "To start using Garak, run the following commands:"
-echo ""
-echo "  source $CONDA_DIR/bin/activate"
-echo "  conda activate $ENV_NAME"
-echo ""
+
 
 
  
