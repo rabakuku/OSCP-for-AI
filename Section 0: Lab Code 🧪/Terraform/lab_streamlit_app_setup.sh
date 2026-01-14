@@ -8,7 +8,7 @@
 
 # Exit immediately if a command exits with a non-zero status
 set -e
-
+cd /oscp-for-ai
 # Define Variables
 REPO_URL="https://github.com/rabakuku/OSCP-for-AI.git"
 # The specific, complex folder name on GitHub
