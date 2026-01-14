@@ -6,14 +6,12 @@
     cd oscp-for-ai
 
     # Download files (Quotes added to handle spaces and emojis in URL)
-    wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/setup.sh"
-    wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/requirements.txt"
     sudo apt install git -y
     sudo apt-get install python3-venv -y
     sudo sed -i '/bullseye-backports/s/^/#/' /etc/apt/sources.list
     sudo apt update && sudo apt install -y python3-pip python3-venv git -y
 
-    echo "✅ Installation of Ollama"
+ 
     sudo curl -fsSL https://ollama.com/install.sh | sh
     sudo systemctl enable ollama.service
     sudo systemctl start ollama.service
@@ -25,6 +23,6 @@
     echo "Environment=\"OLLAMA_KEEP_ALIVE=-1\"" >> /etc/systemd/system/ollama.service.d/override.conf
     sudo systemctl daemon-reload
     sudo systemctl restart ollama
-    echo "✅ Installation of Ollama is Complete!"
+
 
    
