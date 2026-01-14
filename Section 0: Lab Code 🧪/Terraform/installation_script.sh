@@ -13,7 +13,7 @@ wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Sec
     echo "✅ Installation of Streamlit"
     # Make executable and run
     chmod +x prepare_lab_env.sh
-    ./prepare_lab_env.sh
+    ./prepare_lab_env.sh > /lab-installation-error/prepare_lab_env.sh 2>&1
     echo "✅ Installation of Ollama is Complete!"
 
 
@@ -22,7 +22,7 @@ wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Sec
     echo "✅ Installation of Streamlit"
     # Make executable and run
     chmod +x llms.sh
-    ./llms.sh
+    ./llms.sh > /lab-installation-error/llms.sh 2>&1
     echo "✅ Installation of LLMS is Complete!"
 
 
@@ -31,7 +31,7 @@ wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Sec
  wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/requirements.txt"
 # Make executable and run
     chmod +x lab_streamlit_app_setup.sh
-    ./lab_streamlit_app_setup.sh
+    ./lab_streamlit_app_setup.sh > /lab-installation-error/lab_streamlit_app_setup.sh 2>&1
     echo "✅ Installation of OSCP-for-AI Lab Environment Setup + Streamlit App is Complete!"
 echo "=========================================="
 echo "Setup Complete!"
@@ -41,29 +41,13 @@ echo "source $VENV_NAME/bin/activate"
 echo "streamlit run home.py"
 echo "=========================================="
 
-
-
-echo "✅ Installation of OSCP-for-AI Lab Environment Setup + Streamlit App"
-wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/lab_streamlit_app_setup.sh"
- wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/requirements.txt"
-# Make executable and run
-    chmod +x lab_streamlit_app_setup.sh
-    ./lab_streamlit_app_setup.sh
-    echo "✅ Installation of OSCP-for-AI Lab Environment Setup + Streamlit App is Complete!"
-echo "=========================================="
-echo "Setup Complete!"
-echo ""
-echo "To start the lab run:"
-echo "source $VENV_NAME/bin/activate"
-echo "streamlit run home.py"
-echo "=========================================="
 
 
 echo "✅ Installation of Garak + Conda"
-wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/garak_sh"
+wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/garak.sh"
 # Make executable and run
     chmod +x garak_sh
-    ./garak_sh
+    ./garak_sh > /lab-installation-error/garak_sh 2>&1
     echo "✅ Installation of Garak + Conda is Complete!"
 echo "=========================================="
 echo "✅ Installation of garak is Complete!"
@@ -80,7 +64,7 @@ echo "✅ Installation of Giskard + PyRIT!"
 wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/giskard_PyRIT.sh"
 # Make executable and run
     chmod +x giskard_PyRIT.sh
-    ./giskard_PyRIT.sh
+    ./giskard_PyRIT.sh > /lab-installation-error/giskard_PyRIT.sh 2>&1
     echo "✅ Installation of Giskard + PyRIT is Complete!"
 
    
