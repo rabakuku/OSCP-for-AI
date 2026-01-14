@@ -7,7 +7,13 @@
     echo "Startup script already ran once. Exiting."
     exit 0
     fi    
+  # 2. Prepare the Lab Environment
+    # ------------------------------
+    echo "Setting up Course Files..."
+    mkdir -p oscp-for-ai
+    mkdir -p lab-installation-error
 
+    
 echo "✅ Installation of Ollama"
 wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/prepare_lab_env.sh"
     echo "✅ Installation of Streamlit"
