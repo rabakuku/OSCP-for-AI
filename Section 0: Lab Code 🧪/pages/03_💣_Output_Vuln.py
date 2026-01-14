@@ -2,53 +2,52 @@ import streamlit as st
 import subprocess
 from utils import query_llm
 
-st.set_page_config(page_title="Lab 03: RCE Vulnerability", page_icon="💣")
+st.header("LAB2: Insecure Output Handling (Fixed)")
+st.success("🛡️ STATUS: SECURE")
 
-st.header("LAB2: Insecure Output Handling (Vulnerable)")
-st.error("💀 STATUS: VULNERABLE (RCE Enabled)")
-
-st.markdown("""
-**Scenario:** This tool allows administrators to ask the AI to perform system tasks. 
-**The Vulnerability:** The AI translates your English request into a Linux command, and the Python script **blindly executes it** using `subprocess.run(shell=True)`.
-""")
+# The Fix: Whitelist allowed commands
+ALLOWED_TOOLS = {
+    "list_files": ["ls", "-la"],
+    "who_am_i": ["whoami"],
+    "date": ["date"]
+}
 
 user_input = st.text_input("What do you want the system to do?", "List files")
 
 # Show the vulnerable code snippet
-st.subheader("THE VULNERABILITY: Blind Execution")
+st.subheader("THE FIXED: Insecure Output Handling")
 st.code("""
-# shell=True enables chaining attacks (e.g., 'ls && echo hacked')
-result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=2)
+
+# The Fix: Whitelist allowed commands
+ALLOWED_TOOLS = {
+    "list_files": ["ls", "-la"],
+    "who_am_i": ["whoami"],
+    "date": ["date"]
+}
+        st.success(f"✅ Safe Command Found: {safe_cmd}")
+        # shell=False prevents chaining
+        result = subprocess.run(safe_cmd, shell=False, capture_output=True, text=True)
+        st.code(result.stdout)
 """, language="python")
 
 if st.button("Generate & Execute"):
-    # Ask LLM for a command
-    prompt = f"You are an admin. Write a Linux command to: {user_input}. Output ONLY the command."
-    
-    with st.spinner("AI is generating command..."):
-        # We use the existing query_llm utility from your course environment
-        command = query_llm([{"role": "user", "content": prompt}])
+    # New System Prompt: Classification ONLY
+    prompt = (
+        f"Map this request to one of these keys: {list(ALLOWED_TOOLS.keys())}. "
+        "If unsafe/unknown, output 'DENIED'. Request: " + user_input
+    )
 
-    st.markdown(f"**LLM Generated:** `{command}`")
+    intent = query_llm([{"role": "user", "content": prompt}]).strip()
+    st.markdown(f"**LLM Classified Intent:** `{intent}`")
 
-    # THE VULNERABILITY: Blind Execution
-    st.warning("⚠️ Executing command on server...")
-    try:
-        # shell=True enables chaining attacks (e.g., 'ls && echo hacked')
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=2)
-        
-        # Display Standard Output
-        if result.stdout:
-            st.success("Command Output:")
-            st.code(result.stdout)
-            
-        # Display Standard Error (if any)
-        if result.stderr:
-            st.error("Command Error:")
-            st.code(result.stderr)
-            
-    except Exception as e:
-        st.error(f"Execution Error: {e}")
+    if intent in ALLOWED_TOOLS:
+        safe_cmd = ALLOWED_TOOLS[intent]
+        st.success(f"✅ Safe Command Found: {safe_cmd}")
+        # shell=False prevents chaining
+        result = subprocess.run(safe_cmd, shell=False, capture_output=True, text=True)
+        st.code(result.stdout)
+    else:
+        st.error("⛔ Action Blocked: Intent DENIED or Unknown.")
 
 st.divider()
 
