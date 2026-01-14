@@ -3,10 +3,12 @@
     cd /oscp-for-ai
 
     # Download files (Quotes added to handle spaces and emojis in URL)
+    sudo sed -i '/bullseye-backports/s/^/#/' /etc/apt/sources.list
+    sudo apt update -y
+    sudo apt-get install zstd -y
     sudo apt install git -y
     sudo apt-get install python3-venv -y
-    sudo sed -i '/bullseye-backports/s/^/#/' /etc/apt/sources.list
-    sudo apt update && sudo apt install -y python3-pip python3-venv git -y
+    sudo apt install -y python3-pip python3-venv git -y
 
  
     sudo curl -fsSL https://ollama.com/install.sh | sh
