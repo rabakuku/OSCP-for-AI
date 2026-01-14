@@ -15,10 +15,6 @@ REPO_URL="https://github.com/rabakuku/OSCP-for-AI.git"
 GITHUB_SOURCE_FOLDER="Section 0: Lab Code 🧪"
 VENV_NAME="venv"
 
-echo "=========================================="
-echo "Starting OSCP-for-AI Lab Environment Setup"
-echo "=========================================="
-
 # --- Step 1: Sparse Checkout of lab code ---
 echo "[1/4] Initializing Git and performing sparse checkout..."
 
@@ -114,10 +110,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable my_streamlit_app.service
 sudo systemctl start my_streamlit_app.service
 
-echo "=========================================="
-echo "Setup Complete!"
-echo ""
-echo "To start the lab run:"
-echo "source $VENV_NAME/bin/activate"
-echo "streamlit run home.py"
-echo "=========================================="
+
