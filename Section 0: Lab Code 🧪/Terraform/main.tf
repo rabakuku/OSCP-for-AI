@@ -101,85 +101,10 @@ resource "google_compute_instance" "oscp_for_ai" {
   metadata_startup_script = <<-EOT
     #! /bin/bash
 
-    #if file is there, do not run starte up script again
-    FLAG_FILE="/etc/startup_was_launched"
+    wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/installation_script.sh"
+    chmod +x installation_script.sh
+    ./installation_script.sh
 
-    if [[ -f "$FLAG_FILE" ]]; then
-    echo "Startup script already ran once. Exiting."
-    exit 0
-    fi    
-
-    # 2. Prepare the Lab Environment
-    # ------------------------------
-    echo "Setting up Course Files..."
-    mkdir -p oscp-for-ai
-    cd oscp-for-ai
-
-    # Download files (Quotes added to handle spaces and emojis in URL)
-    wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/setup.sh"
-    wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section 0%3A Lab Code 🧪/requirements.txt"
-    sudo apt install git -y
-    sudo apt-get install python3-venv -y
-    sudo sed -i '/bullseye-backports/s/^/#/' /etc/apt/sources.list
-    sudo apt update && sudo apt install -y python3-pip python3-venv git -y
-    sudo curl -fsSL https://ollama.com/install.sh | sh
-    sudo systemctl enable ollama.service
-    sudo systemctl start ollama.service
-    #Configure Ollama for Parallelism
-    mkdir -p /etc/systemd/system/ollama.service.d
-    echo "[Service]" > /etc/systemd/system/ollama.service.d/override.conf
-    echo "Environment=\"OLLAMA_NUM_PARALLEL=16\"" >> /etc/systemd/system/ollama.service.d/override.conf
-    echo "Environment=\"OLLAMA_MAX_LOADED_MODELS=1\"" >> /etc/systemd/system/ollama.service.d/override.conf
-    echo "Environment=\"OLLAMA_KEEP_ALIVE=-1\"" >> /etc/systemd/system/ollama.service.d/override.conf
-
-    echo "✅ Installation of Ollama is Complete!"
-
-    sudo systemctl daemon-reload
-    sudo systemctl restart ollama
-    sudo ollama pull llama3
-    sudo ollama pull llama-guard3
-    sudo ollama pull llava
-    sudo ollama pull dolphin-llama3
-    sudo ollama pull mistral-nemo
-    sudo ollama pull llama2-uncensored
-    sudo ollama pull gemma:2b
-    sudo ollama pull phi3:mini
-    echo "✅ Downloaded all LLMS"
-
-
-    # Make executable and run
-    chmod +x setup.sh
-    ./setup.sh
-    echo "✅ Installation of Streamlit is Complete!"
-
-    #install miniconda + garak
-    wget https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%204%3A%20Automated%20Warfare/garak/setup_garak.sh
-    chmod +x setup_garak.sh
-    ./setup_garak.sh
-echo "✅ Installation of garak is Complete!"
-
-  #install and setup Giskard
-cd /
-mkdir giskard_lab
-cd giskard_lab
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
-conda create -n giskard_lab python=3.10 -y
-conda activate giskard_lab
-pip install "giskard[llm]" -y 
-pip install langchain langchain-community pandas langchain-ollama -y 
-echo "✅ Installation of Giskard is Complete!"
-
-
-  #install and setup PyRIT
-cd / 
-mkdir PyRIT_lab
-conda create -n PyRIT_lab python=3.11 -y
-conda activate PyRIT_lab
-cd PyRIT_lab
-pip install pandas python-dotenv pyrit tabulate -y
-wget https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%204%3A%20Automated%20Warfare/PyRIT/pyrit_master.py
-echo "✅ Installation of PyRIT is Complete!"
 
 
   EOT
