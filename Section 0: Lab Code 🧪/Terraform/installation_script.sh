@@ -46,8 +46,8 @@ echo "=========================================="
 echo "✅ Installation of Garak + Conda"
 wget "https://raw.githubusercontent.com/rabakuku/OSCP-for-AI/refs/heads/main/Section%200%3A%20Lab%20Code%20%F0%9F%A7%AA/Terraform/garak.sh"
 # Make executable and run
-    chmod +x garak_sh
-    ./garak_sh > /lab-installation-error/garak_sh 2>&1
+    chmod +x garak.sh
+    ./garak.sh > /lab-installation-error/garak.sh 2>&1
     echo "✅ Installation of Garak + Conda is Complete!"
 echo "=========================================="
 echo "✅ Installation of garak is Complete!"
