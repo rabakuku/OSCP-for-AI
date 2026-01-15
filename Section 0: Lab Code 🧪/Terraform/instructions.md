@@ -150,5 +150,3 @@ terraform destroy
 
 
 ---
-
-**Next Step:** Would you like me to create a "troubleshooting" section for this `.md` file in case the GPU driver installation fails?
